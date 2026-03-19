@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account - Tweak Music</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0b0b;
+            --bg-card: #181818;
+            --accent: #ff2a5f;
+            --text-dim: #b3b3b3;
+            --border: #333;
+        }
+
+        body { 
+            background: var(--bg-main); 
+            color: white; 
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+
+        .login-card { 
+            background: var(--bg-card); 
+            padding: 30px 40px; 
+            border-radius: 16px; 
+            border: 1px solid var(--border); 
+            text-align: center; 
+            width: 340px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+        }
+
+        h1 { color: var(--accent); margin-bottom: 20px; font-weight: 700; letter-spacing: -1px; }
+
+        .input-group { text-align: left; margin-bottom: 12px; position: relative; }
+        .input-group label { 
+            display: block; 
+            font-size: 11px; 
+            color: var(--text-dim); 
+            margin-bottom: 4px; 
+            text-transform: uppercase; 
+            font-weight: 600; 
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            background: #2a2a2a; 
+            border: 1px solid var(--border); 
+            color: white; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            outline: none; 
+            transition: 0.2s; 
+        }
+
+        input:focus { border-color: var(--accent); background: #333; }
+
+        .signup-btn { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 25px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            transition: 0.2s; 
+            font-size: 15px; 
+        }
+
+        .signup-btn:hover { background: #ff5c86; transform: translateY(-1px); }
+
+        .login-link { margin-top: 20px; font-size: 13px; color: var(--text-dim); }
+        .login-link a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        
+        .error-msg {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .password-wrapper { position: relative; }
+
+        /* Loading Spinner Styles */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .signup-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .input-group { 
+    position: relative; 
+}
+
+.password-wrapper { 
+    position: relative; 
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust centering offset */
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    fill: #666;
+    z-index: 10;
+}
+
+.toggle-pass:hover { 
+    fill: var(--accent); 
+}
+
+.login-link { 
+    margin-top: 25px; 
+    font-size: 13px; 
+    color: var(--text-dim); 
+}
+
+.login-link a { 
+    color: var(--accent); 
+    text-decoration: none; 
+    font-weight: 600; 
+    transition: 0.2s;
+}
+
+.login-link a:hover { 
+    text-decoration: underline;
+    color: #ff5c86; /* Slightly lighter pink on hover */
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h1>Join Tweak</h1>
+        
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="John Doe">
+        </div>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="johndoe123">
+        </div>
+
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="name@example.com">
+        </div>
+
+        <div class="input-group">
+    <label>Password</label>
+    <div class="password-wrapper">
+        <input type="password" id="password" placeholder="••••••••" oninput="validatePassword()">
+        <svg class="toggle-pass" onclick="togglePassword('password', this)" viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>
+    </div>
+    <div class="strength-meter"><div id="strengthBar" class="strength-bar" style="height: 4px; border-radius: 2px; transition: 0.3s; margin-top: 5px;"></div></div>
+    <div class="password-requirements" style="font-size: 11px; margin-top: 10px; text-align: left;">
+        <div id="req-length" class="requirement">• 6 Characters</div>
+        <div id="req-upper" class="requirement">• One Uppercase</div>
+        <div id="req-special" class="requirement">• One Special (@$!%*#?&.)</div>
+    </div>
+</div>
+
+<div class="input-group">
+    <label>Confirm Password</label>
+    <div class="password-wrapper">
+        <input type="password" id="confirmPassword" placeholder="••••••••">
+        <svg class="toggle-pass" onclick="togglePassword('confirmPassword', this)" viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>   
+    </div>
+</div>
+
+        <div id="errorMsg" class="error-msg"></div>
+
+        <div style="text-align: left; margin: 15px 0; font-size: 12px; color: var(--text-dim);">
+    <input type="checkbox" id="termsCheckbox" style="accent-color: var(--accent);">
+    <label for="termsCheckbox">
+        I agree to the <a href="terms.html" target="_blank" style="color: var(--accent);">Terms & Conditions</a>. 
+    </label>
+</div>
+
+        <button class="signup-btn" id="signupBtn" onclick="completeSignup()">
+            <span id="btnSpinner" class="spinner"></span>
+            <span id="btnText">Create Account</span>
+        </button>
+
+        <div class="login-link">
+    Already have an account? <a href="login.html">Log In</a>
+</div>
+    </div> 
+
+    <script>
+    // --- Find the completeSignup function in your <script> tag and replace it with this fixed version ---
+
+function completeSignup() {
+    const name = document.getElementById('fullName').value;
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('password').value;
+    const confirmPass = document.getElementById('confirmPassword').value;
+    const errorMsg = document.getElementById('errorMsg');
+    const termsAccepted = document.getElementById('termsCheckbox').checked;
+
+    errorMsg.style.display = 'none';
+
+    // 1. Basic validation
+    if(!name || !username || !email || !pass || !confirmPass) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    // 2. Terms validation
+    if (!termsAccepted) {
+        alert("You must accept the Terms and Conditions to create an account.");
+        return;
+    }
+
+    // 3. Duplicate check
+    const existingAccounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+    const isUsernameTaken = existingAccounts.some(acc => acc.username.toLowerCase() === username.toLowerCase());
+    const isEmailTaken = existingAccounts.some(acc => acc.email.toLowerCase() === email.toLowerCase());
+
+    if (isUsernameTaken) {
+        errorMsg.textContent = "This username is already taken.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    if (isEmailTaken) {
+        errorMsg.textContent = "An account with this email already exists.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    // 4. Password validation
+    if(!validatePassword()) {
+        alert("Password does not meet requirements.");
+        return;
+    }
+
+    if(pass !== confirmPass) {
+        errorMsg.textContent = "Passwords do not match!";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    // 5. FIXED: Send Welcome Email with correct variables
+    const signupParams = {
+        to_email: email,
+        name: username,
+        subject_type: "Welcome!", 
+        message: "Your new Tweak Music account is ready. Welcome to the community!",
+        recovery_url: window.location.origin + "/login.html"
+    };
+
+    // Use signupParams here to match the definition above
+    emailjs.send("service_i554v5c", "template_5k5jykh", signupParams)
+        .then(() => console.log("Welcome email sent successfully"))
+        .catch(err => console.error("Email failed:", err));
+
+    // 6. Save and Redirect
+    registerNewAccount(username);
+    
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('fullName', name);
+    localStorage.setItem('userName', username);
+    
+    // UI Feedback for the button
+    document.getElementById('btnSpinner').style.display = 'inline-block';
+    document.getElementById('btnText').innerText = "Creating Account...";
+    
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1500);
+}
+    </script>
+</body>
+</html>

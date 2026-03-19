@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In - Tweak Music</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #ff2a5f; --bg: #0f0f0f; --card: #181818; --input-bg: #2a2a2a; }
+        
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .login-card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center; width: 360px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        
+        h1 { color: var(--accent); margin-bottom: 25px; font-weight: 700; font-size: 28px; }
+        
+        .input-group { text-align: left; margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        
+        /* Input & Wrapper Styling */
+        .field-wrapper { position: relative; width: 100%; }
+        input { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; font-size: 14px; transition: 0.2s; }
+        input:focus { border-color: var(--accent); background: #333; }
+        
+        /* Eye Icon Styling */
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; font-size: 14px; z-index: 5; }
+        .toggle-password:hover { color: var(--accent); }
+
+        /* Links & Utility */
+        .forgot-link { display: block; text-align: right; color: var(--accent); font-size: 11px; text-decoration: none; margin-top: 5px; font-weight: 600; }
+        
+        .remember-group { display: flex; align-items: center; justify-content: center; margin: 20px 0; gap: 10px; }
+        .remember-group input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+        .remember-group label { font-size: 12px; color: #b3b3b3; cursor: pointer; }
+
+        .signin-btn { background: var(--accent); color: white; border: none; padding: 14px; width: 100%; border-radius: 30px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .signin-btn:hover { background: #ff5c86; transform: translateY(-2px); }
+
+        .manage-link { background: none; border: none; color: #666; font-size: 11px; cursor: pointer; display: block; margin: 0 auto; }
+        .manage-link:hover { color: var(--accent); text-decoration: underline; }
+
+        .divider { margin: 25px 0; display: flex; align-items: center; color: #444; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #333; margin: 0 10px; }
+
+        .signup-text { margin-top: 25px; font-size: 13px; color: #888; }
+        .signup-text a { color: var(--accent); text-decoration: none; font-weight: 700; }
+
+        /* Manager View */
+        #accountManager { display: none; background: #222; border-radius: 12px; padding: 15px; border: 1px solid #444; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>Log in Tweak</h1>
+        
+        <div id="loginForm">
+            <div class="input-group">
+                <label>Username</label>
+                <div class="field-wrapper">
+                    <input type="text" id="username" placeholder="Enter username/email">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <div class="field-wrapper">
+                    <input type="password" id="password" placeholder="••••••••">
+                    <i class="fa-solid fa-eye-slash toggle-password" id="eyeIcon" onclick="togglePassword()"></i>
+                </div>
+               <div style="margin-top: 15px;">
+    <a href="reset-password.html" style="color: #666; font-size: 12px; text-decoration: none;">Forgot password?</a>
+</div>
+                
+            </div>
+
+            <div class="remember-group">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+            </div>
+
+            <button class="signin-btn" onclick="performLogin()">Sign In</button>
+            <button id="showDeleteBtn" class="manage-link" onclick="toggleAccountManager()" style="display:none;">Delete account</button>
+        </div>
+
+        <div id="accountManager">
+            <h3 style="margin:0 0 10px 0; font-size:10px; color:#888; text-transform:uppercase;">Previous Accounts</h3>
+            <div id="accountListContainer"></div>
+            <button onclick="toggleAccountManager()" class="manage-link" style="margin-top:10px; color:var(--accent); font-weight:700;">Close</button>
+        </div>
+
+        <div class="divider">Or connect with</div>
+        <div id="googleBtnContainer" style="display:flex; justify-content:center; min-height: 44px;"></div>
+        
+        <p class="signup-text">Don't have an account? <a href="signup.html">Create one</a></p>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        function togglePassword() {
+            const passInput = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            } else {
+                passInput.type = 'password';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
+        }
+
+        // Initialize Google and EmailJS
+        (function(){ emailjs.init("eUN1Mra0X09Pw1Qs-"); })();
+
+        window.onload = () => {
+            const savedUser = localStorage.getItem('remembered_tweak_user');
+            if (savedUser) document.getElementById('username').value = savedUser;
+
+            const accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+            if (accounts.length > 0) document.getElementById('showDeleteBtn').style.display = 'block';
+
+            if (typeof google !== 'undefined') {
+                google.accounts.id.initialize({
+                    client_id: "110500986224-u7lahd2t5naa30oavd3hidkv6vs994pp.apps.googleusercontent.com",
+                    callback: handleCredentialResponse
+                });
+                renderGoogleBtn();
+            }
+        };
+
+        function renderGoogleBtn() {
+            google.accounts.id.renderButton(document.getElementById("googleBtnContainer"), 
+            { theme: "outline", size: "large", width: "280", shape: "pill" });
+        }
+
+        function handleCredentialResponse(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userName', payload.name);
+            window.location.href = 'index.html';
+        }
+
+        function performLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            const accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+            const account = accounts.find(acc => acc.username === user || acc.email === user);
+
+            if (account && account.password === pass) {
+                if (account.status === 'Banned') return alert("ACCESS DENIED: Account blocked.");
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userName', account.username);
+                window.location.href = 'index.html';
+            } else {
+                alert("Invalid credentials.");
+            }
+        }
+
+        function toggleAccountManager() {
+            const manager = document.getElementById('accountManager');
+            const form = document.getElementById('loginForm');
+            const container = document.getElementById('accountListContainer');
+            const isShowing = manager.style.display === 'block';
+
+            if (!isShowing) {
+                const accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+                container.innerHTML = accounts.map(acc => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #333;">
+                        <div style="text-align:left;">
+                            <div style="font-size:13px; color:white; font-weight:600;">${acc.username}</div>
+                            <div style="font-size:10px; color:#666;">${acc.email || ''}</div>
+                        </div>
+                        <button onclick="deleteAccount('${acc.username}')" style="background:var(--accent); color:white; border:none; border-radius:6px; padding:5px 10px; font-size:10px; font-weight:700; cursor:pointer;">Delete</button>
+                    </div>
+                `).join('');
+                manager.style.display = 'block';
+                form.style.display = 'none';
+            } else {
+                manager.style.display = 'none';
+                form.style.display = 'block';
+                renderGoogleBtn();
+            }
+        }
+
+        function deleteAccount(user) {
+            if (confirm(`Remove ${user}?`)) {
+                let accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+                accounts = accounts.filter(acc => acc.username !== user);
+                localStorage.setItem('tweak_accounts_data', JSON.stringify(accounts));
+                toggleAccountManager(); toggleAccountManager();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tweak Music Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/player.css">
+<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/responsive.css">
+<script src="https://www.youtube.com/iframe_api"></script>
+<style>
+:root {
+  --bg-main:#121212;
+  --bg-header:#181818;
+  --bg-section:#1f1f1f;
+  --bg-card:#2a2a2a;
+  --bg-menu:#282828;
+  --bg-menu-hover:#3e3e3e;
+  --text-main:#fff;
+  --text-dim:#b3b3b3;
+  --accent:#ff2a5f;
+  --accent-hover:#ff5c86;
+  --border:#333;
+}
+
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+  min-height:100vh;
+  caret-color: transparent;
+  overflow: hidden; 
+}
+
+/* HEADER */
+.header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 20px; background:var(--bg-header);
+  border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; min-height:60px;
+}
+.left-section, .right-section{
+  display:flex; align-items:center; gap:12px; position:relative;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Tightened gap to accommodate the extra button */
+  flex-shrink: 0;
+}
+
+.header-logo{ display:flex; align-items:center; gap:8px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:24px; font-weight:700; user-select:none; }
+
+.header-btn{ background:var(--accent); border:none; color:white; padding:10px 18px; border-radius:20px; cursor:pointer; font-size:15px; font-weight:600; display:flex; align-items:center; gap:8px; user-select:none; transition:0.2s; }
+.header-btn:hover{ background:var(--accent-hover); }
+.header-btn.outline{ background:transparent; color:var(--text-main); border:1px solid var(--border); }
+.header-btn.outline:hover{ background:var(--bg-menu-hover); border-color: var(--accent); }
+.logo-img {
+  width: 32px;  /* Adjust size as needed */
+  height: auto;
+  display: block;
+  /* Optional: If you want to change the green icon to match your --accent color (#ff2a5f) */
+  /* filter: hue-rotate(280deg) saturate(150%); */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px; /* Fixed height for consistency */
+}
+
+/* Ensure the right section groups Search */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto; /* This pushes it to the far right */
+}
+
+/* Fix for Search Wrapper layout */
+.search-wrapper {
+  display: none; /* Controlled by JS */
+  position: relative;
+  align-items: center;
+}
+
+/* SEARCH STYLES */
+.search-btn{ background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim); padding:10px 15px; border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:14px; min-width:40px; transition:0.2s; }
+.search-btn:hover { border-color: var(--accent); color: var(--text-main); }
+
+.search-wrapper {
+  display: none;
+  position: relative;
+  align-items: center;
+}
+.search-input {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px; /* Matches the button roundness */
+  padding: 10px 40px 10px 15px;
+  color: var(--text-main);
+  font-size: 14px;
+  outline: none;
+  width: 200px; /* Fixed width or use flex-grow */
+  caret-color: var(--accent);
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.clear-search-btn, .lib-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 20px;
+  display: none; 
+  padding: 0;
+  line-height: 1;
+  transition: 0.2s;
+  z-index: 5;
+}
+.clear-search-btn:hover, .lib-clear-btn:hover { color: var(--accent); }
+
+/* Enhanced hover for the search button */
+.search-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+  background-color: var(--bg-menu-hover);
+}
+
+/* Ensure the input matches the button's shape and style */
+.search-input {
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  width: 220px; /* Slightly expands when active */
+}
+
+/* Styling the initial button */
+.search-btn {
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background: var(--bg-menu-hover);
+  border-color: var(--accent);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+/* Styling the active input */
+.search-input {
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.profile-icon{
+  display:flex;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:var(--accent);
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.profile-icon:hover{
+  background:var(--accent-hover);
+}
+
+.profile-menu {
+  display: none;
+  position: absolute;
+  top: 65px; /* Adjusted to sit below the header */
+  right: 20px; 
+  background: var(--bg-menu);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  flex-direction: column;
+  min-width: 160px;
+  z-index: 10000; /* Increased to stay above everything */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* MAIN SECTIONS */
+.main-sections{
+  display:flex; flex-direction:column; gap:20px; padding:30px; max-width:1200px; margin:0 auto;
+  user-select:none; caret-color: transparent;
+  height: calc(100vh - 165px);
+  overflow-y: scroll;
+  scrollbar-width: none; 
+}
+.main-sections::-webkit-scrollbar { display: none; }
+
+.section{
+  background:var(--bg-section);
+  padding:20px;
+  border-radius:12px;
+  position:relative;
+  user-select:none; caret-color: transparent;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.section-title{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom: 0;
+}
+.nav-arrows {
+  display: flex;
+  gap: 8px;
+}
+.nav-arrow {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.nav-arrow:hover { background: var(--bg-menu-hover); border-color: var(--accent); }
+
+.cards-grid{
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+}
+.cards-grid::-webkit-scrollbar { height: 4px; }
+.cards-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+.card{
+  background:var(--bg-card);
+  padding:15px;
+  border-radius:12px;
+  cursor:pointer;
+  transition: transform 0.2s, background 0.2s;
+  min-width: 180px; 
+  user-select:none;
+}
+.card:hover{
+  transform:translateY(-5px);
+  background:var(--bg-menu-hover);
+}
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-radius:8px;
+  margin-bottom:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.card-title{ font-size:15px; font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card-subtitle{ font-size:13px; color:var(--text-dim); }
+
+/* Top 2-Column Grid */
+.top-mixes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.mix-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mix-card:hover { background: rgba(255,255,255,0.2); }
+
+.mix-card img { width: 64px; height: 64px; object-fit: cover; }
+
+.mix-card span { font-weight: 600; font-size: 14px; }
+
+/* Filter Chips */
+.category-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-chip {
+  background: #2a2a2a;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.filter-chip.active { background: white; color: black; }
+
+.show-all {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 600;
+  cursor: pointer;
+}
+.show-all:hover { text-decoration: underline; }
+
+/* DROPDOWN MENUS */
+.hamburger-menu, .library-menu, .profile-menu, .queue-menu, .song-options-menu{
+  display:none;
+  position:absolute;
+  top:55px;
+  background:var(--bg-menu);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px;
+  flex-direction:column;
+  min-width:200px;
+  z-index:2000;
+  user-select:none;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+}
+.profile-menu{ right:0; }
+.queue-menu { bottom: 90px; top: auto; right: 20px; width: 250px; }
+.song-options-menu { bottom: 90px; top: auto; right: 20px; width: 220px; }
+
+.hamburger-menu button, .library-menu button, .profile-menu button, .queue-menu .queue-item, .song-options-menu button{
+  background:none; border:none; color:var(--text-main);
+  padding:12px 16px; text-align:left; cursor:pointer; font-size:14px; font-weight:500;
+  border-radius:8px; transition:0.2s; display: flex; align-items: center; gap: 10px; width: 100%;
+}
+.hamburger-menu button:hover, .library-menu button:hover, .profile-menu button:hover, .queue-item:hover, .song-options-menu button:hover{
+  background:var(--bg-menu-hover); color:var(--accent);
+}
+
+.queue-header { padding: 10px; font-weight: 700; border-bottom: 1px solid var(--border); margin-bottom: 5px; color: var(--accent); }
+
+/* LYRICS MODAL */
+.lyrics-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 3000;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+.lyrics-container {
+  max-width: 600px;
+  width: 90%;
+  max-height: 70vh;
+  overflow-y: auto;
+  text-align: center;
+  padding: 20px;
+}
+.lyrics-container::-webkit-scrollbar { width: 6px; }
+.lyrics-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.lyrics-text { font-size: 24px; font-weight: 600; line-height: 1.6; color: var(--text-dim); }
+.lyrics-text span.active-line { color: #fff; text-shadow: 0 0 10px var(--accent); }
+.close-lyrics { position: absolute; top: 30px; right: 30px; font-size: 30px; cursor: pointer; color: var(--text-dim); transition: 0.2s; }
+.close-lyrics:hover { color: var(--accent); }
+
+/* CUSTOM SCROLLBAR */
+.custom-scrollbar-track {
+  position: fixed;
+  right: 10px;
+  top: 80px;
+  bottom: 100px;
+  width: 16px;
+  background: #2a2a2a;
+  border-radius: 10px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scroll-arrow-up {
+  width: 0; height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 7px solid #888;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.scroll-thumb {
+  width: 10px;
+  background: #a0a0a0;
+  border-radius: 10px;
+  position: absolute;
+  top: 20px;
+  cursor: grab;
+  min-height: 40px;
+}
+
+.toast{
+  position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--accent); color:white; padding:10px 20px; border-radius:20px; z-index:9999; opacity:0; transition:0.3s; pointer-events:none;
+}
+.toast.show{ transform:translateX(-50%) translateY(0); opacity:1; }
+
+/* MUSIC BAR */
+.music-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: #181818;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.music-bar.collapsed {
+  transform: translateY(72px); 
+  cursor: pointer;
+}
+
+.music-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 30%;
+  cursor: pointer;
+}
+
+.music-info img {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.song-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-name { font-size: 14px; font-weight: 600; color: #fff; }
+.song-artist { font-size: 12px; color: var(--text-dim); }
+
+.like-btn {
+  background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 5px; margin-left: 5px; transition: 0.2s;
+}
+.like-btn.liked { color: var(--accent); }
+.like-btn:hover { transform: scale(1.1); }
+
+.music-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  gap: 8px;
+}
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.control-btn {
+  background: none; border: none; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: 0.2s;
+}
+.control-btn:hover { color: var(--accent); }
+.control-btn.active { color: var(--accent); }
+
+.control-btn.play-pause {
+  background: #fff; color: #000; width: 35px; height: 35px; border-radius: 50%;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.time-text { font-size: 11px; color: var(--text-dim); min-width: 30px; }
+
+.progress-bar-container {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.progress-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #4f4f4f;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  margin-top: -4px; 
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.progress-bar-container:hover .progress-slider::-webkit-slider-thumb { opacity: 1; }
+
+.music-extras {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 30%;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  width: 80px;
+  height: 4px;
+  background: #444;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.extra-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; transition: 0.2s; }
+.extra-btn:hover { color: #fff; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="left-section">
+    <div class="hamburger" onclick="toggleMenu('hamburgerMenu', event)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </div>
+    <button class="header-btn outline" onclick="location.reload()">Home</button>
+    <button class="header-btn" onclick="toggleMenu('libraryMenu', event)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18V6a2 2 0 012-2h4l2 2h7a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      <span class="library-btn-text">Library</span>
+    </button>
+
+<div id="loggedOutUI_Left"></div>
+    <button class="header-btn outline" id="signInBtn" onclick="window.location.href='login.html'"> 
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+      <polyline points="10 17 15 12 10 7"></polyline>
+      <line x1="15" y1="12" x2="3" y2="12"></line>
+    </svg>
+    <span>Sign In</span>
+    </button>
+
+    <div class="hamburger-menu" id="hamburgerMenu">
+      <button onclick="showToast('Profile')">My Profile</button>
+      <button onclick="showToast('App Settings')">App Settings</button>
+      <button onclick="showToast('Help & Support')">Help & Support</button>
+    </div>
+
+    <div class="library-menu" id="libraryMenu" onclick="event.stopPropagation()">
+      <div id="libButtonsContainer">
+        <button onclick="showToast('Creating Playlist...')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Your Library
+    </button>
+    
+    <hr style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
+
+    <button onclick="showToast('Creating Playlist...')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create Playlist
+        </button>
+        <button onclick="showToast('Liked Songs')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px; vertical-align: middle; color: var(--accent);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          Liked Songs
+        </button>
+        <hr id="libDivider" style="border: 0; border-top: 1px solid var(--border); margin: 5px 0;">
+        <button onclick="showToast('Playlists')">Your Playlists</button>
+        <button onclick="showToast('Artists')">Followed Artists</button>
+        <button onclick="showToast('Albums')">Saved Albums</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-logo">
+  <span>Tweak</span>
+  </div>
+
+  <div class="right-section" id="authSection">
+  <div id="userProfile" class="profile-icon" style="display: none;" onclick="toggleMenu('profileMenu', event)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M4 21v-2a4 4 0 0 1 3-3.87"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+  </div>
+
+  <button class="search-btn" id="searchBtn" onclick="activateSearch()">Search</button>
+  
+  <div class="search-wrapper" id="searchWrapper">
+    <input type="text" id="searchInput" class="search-input" placeholder="Type to search..." 
+           oninput="toggleClearBtn(this.value)" 
+           onkeydown="if(event.key==='Enter') performSearch(this.value)">
+    <button class="clear-search-btn" id="clearSearchBtn" onclick="clearSearch()">&times;</button>
+  </div>
+</div>
+
+      <div class="profile-menu" id="profileMenu">
+          <button onclick="showToast('Profile Settings')">Profile</button>
+          <button onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main-sections" id="mainContainer">
+  <div class="top-mixes-grid">
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix1/80" alt="Mix"><span>Top Gaming Tracks</span></div>
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix2/80" alt="Mix"><span>Gabzy</span></div>
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix3/80" alt="Mix"><span>Drake</span></div>
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix4/80" alt="Mix"><span>Wizkid Mix</span></div>
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix5/80" alt="Mix"><span>King Of The Dancehall</span></div>
+    <div class="mix-card"><img src="https://picsum.photos/seed/mix6/80" alt="Mix"><span>So Easy</span></div>
+  </div>
+
+  <div class="category-filters">
+    <button class="filter-chip active">All</button>
+    <button class="filter-chip">Music</button>
+    <button class="filter-chip">Podcasts</button>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Made For You</div>
+      <span class="show-all">Show all</span>
+    </div>
+    <div class="cards-grid">
+        <div class="card"><img src="https://picsum.photos/seed/m1/200" alt="1"><div class="card-title">Daily Mix 1</div><div class="card-subtitle">Drake, J. Cole, Central Cee...</div></div>
+        <div class="card"><img src="https://picsum.photos/seed/m2/200" alt="2"><div class="card-title">Daily Mix 2</div><div class="card-subtitle">Lojay, Melvitto, Show Dem Camp...</div></div>
+        <div class="card"><img src="https://picsum.photos/seed/m3/200" alt="3"><div class="card-title">Daily Mix 3</div><div class="card-subtitle">Vybz Kartel, Kranium...</div></div>
+        <div class="card"><img src="https://picsum.photos/seed/m4/200" alt="4"><div class="card-title">Daily Mix 4</div><div class="card-subtitle">Don Toliver, A Boogie Wit da Hoodie...</div></div>
+    </div>
+  </div>
+</div>
+  <div style="height: 600px;"></div>
+</div>
+
+<div class="lyrics-overlay" id="lyricsOverlay" onclick="toggleLyrics(false)">
+    <div class="close-lyrics" onclick="toggleLyrics(false)">&times;</div>
+    <h2 id="lyricsSongName" style="margin-bottom: 5px;">Song Name</h2>
+    <p id="lyricsSongArtist" style="color: var(--accent); margin-bottom: 30px;">Artist Name</p>
+    <div class="lyrics-container" onclick="event.stopPropagation()">
+        <div class="lyrics-text" id="lyricsBody">
+            </div>
+    </div>
+</div>
+
+<div class="music-bar" id="musicBar" onclick="handleBarClick(event)">
+    <div class="music-info" title="Click to collapse">
+        <img src="https://picsum.photos/seed/stunta/50" alt="Album Art">
+        <div class="song-details">
+            <span class="song-name">Stunta</span>
+            <span class="song-artist">Gyptian & Ricky Blaze • Stunta • 2026</span>
+        </div>
+        <button class="like-btn" id="mainLikeBtn" onclick="toggleLike(event)">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+    </div>
+
+    <div class="music-controls" onclick="event.stopPropagation()">
+        <div class="control-buttons">
+            <button class="control-btn" onclick="toggleControl(this, 'Shuffle')" title="Shuffle">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+            </button>
+            <button class="control-btn" id="prevBtn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+            <button class="control-btn play-pause"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
+            <button class="control-btn" id="nextBtn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+            <button class="control-btn" onclick="toggleControl(this, 'Repeat')" title="Repeat">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            </button>
+        </div>
+        <div class="progress-container">
+            <span class="time-text" id="currentTime">0:00</span>
+            <div class="progress-bar-container">
+                <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0" oninput="handleSeek(this.value)">
+            </div>
+            <span class="time-text" id="durationTime">3:28</span>
+        </div>
+    </div>
+
+    <div class="music-extras" onclick="event.stopPropagation()">
+        <button class="extra-btn" title="Lyrics" onclick="toggleLyrics(true)">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </button>
+        <button class="extra-btn" title="Full Screen" onclick="toggleFullScreen()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+        </button>
+        <button class="extra-btn" id="volBtn" title="Mute/Unmute" onclick="toggleMute()">
+            <svg id="volSvg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+        </button>
+        <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="70" oninput="handleVolume(this.value)">
+        
+        <button class="extra-btn" title="Options" onclick="toggleMenu('songOptionsMenu', event)">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        </button>
+    </div>
+</div>
+
+<div class="song-options-menu" id="songOptionsMenu">
+    <button onclick="handleDownload()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Download
+    </button>
+    <button onclick="handleShare()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8m-4-6l-4-4-4 4m4-4v13"/></svg>
+        Share
+    </button>
+    <button onclick="toggleMenu('queueMenu', event)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        Queue
+    </button>
+    <button onclick="showToast('Added to Library!')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Add to Library
+    </button>
+    <button onclick="showToast('Playlist menu coming soon!')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 11H5m14-4H5m14 8H5"/></svg>
+        Add to Playlist
+    </button>
+    <button onclick="showToast('Navigating to Artist...')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 00-3-3.87M4 21v-2a4 4 0 013-3.87"/></svg>
+        Go to Artist
+    </button>
+    <button onclick="showToast('Opening song details...')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+        View Song
+    </button>
+</div>
+
+<div class="queue-menu" id="queueMenu">
+    <div class="queue-header">Up Next</div>
+    <div id="queueList"></div>
+</div>
+
+<div class="custom-scrollbar-track" id="scrollTrack">
+    <div class="scroll-arrow-up"></div>
+    <div class="scroll-thumb" id="scrollThumb"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Function to update UI based on login status
+function updateAuthUI() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const signInBtn = document.getElementById('signInBtn');
+    const userProfile = document.getElementById('userProfile');
+
+    if (isLoggedIn) {
+        if (signInBtn) signInBtn.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'flex';
+    } else {
+        if (signInBtn) signInBtn.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+    }
+}
+
+// Update the Sign In button click in the HTML to:
+// onclick="window.location.href='login.html'"
+
+function handleLogout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userName');
+    updateAuthUI();
+    showToast("Signed out. See you soon!");
+    // Optional: reload to reset all states
+    // location.reload(); 
+}
+
+// Call this on window load
+window.addEventListener('load', updateAuthUI);
+
+// --- SEARCH LOGIC ---
+function activateSearch() {
+  const btn = document.getElementById('searchBtn');
+  const wrapper = document.getElementById('searchWrapper');
+  const input = document.getElementById('searchInput');
+
+  btn.style.display = 'none'; 
+  wrapper.style.display = 'flex'; 
+  input.focus();
+
+  // Reset the sequence if the user clicks anywhere else
+  const closeSearch = (e) => {
+    if (!wrapper.contains(e.target) && e.target !== btn) {
+      if (input.value === "") {
+        wrapper.style.display = 'none';
+        btn.style.display = 'flex';
+        document.removeEventListener('click', closeSearch);
+      }
+    }
+  };
+
+  // Delay adding the listener so the current click doesn't trigger it immediately
+  setTimeout(() => {
+    document.addEventListener('click', closeSearch);
+  }, 10);
+}
+
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const wrapper = document.getElementById('searchWrapper');
+
+  input.value = ""; 
+  toggleClearBtn(""); 
+  
+  // Return to initial state
+  wrapper.style.display = 'none';
+  btn.style.display = 'flex';
+}
+
+// 1. The missing function to show/hide the 'X' button
+function toggleClearBtn(val) {
+  const clearBtn = document.getElementById('clearSearchBtn');
+  if (clearBtn) {
+    clearBtn.style.display = val.length > 0 ? 'block' : 'none';
+  }
+}
+
+// 2. Updated Activation with "Click Anywhere to Reset"
+function activateSearch() {
+  const btn = document.getElementById('searchBtn');
+  const wrapper = document.getElementById('searchWrapper');
+  const input = document.getElementById('searchInput');
+
+  btn.style.display = 'none'; 
+  wrapper.style.display = 'flex'; 
+  input.focus();
+
+  // Listener to detect clicks outside the search area
+  const resetSearch = (e) => {
+    // If the click is outside the wrapper AND it's not the button that triggered it
+    if (!wrapper.contains(e.target) && e.target !== btn) {
+      if (input.value === "") {
+        wrapper.style.display = 'none';
+        btn.style.display = 'flex';
+        document.removeEventListener('click', resetSearch);
+      }
+    }
+  };
+
+  // Timeout prevents the current click from immediately triggering the listener
+  setTimeout(() => {
+    document.addEventListener('click', resetSearch);
+  }, 10);
+}
+
+// 3. Updated Clear function to return to the button state
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  const wrapper = document.getElementById('searchWrapper');
+
+  input.value = ""; 
+  toggleClearBtn(""); 
+  
+  // Sequence begins again: hide input, show original button
+  wrapper.style.display = 'none';
+  btn.style.display = 'flex';
+}
+
+// --- LIBRARY SEARCH ---
+// --- UPDATED LIBRARY SEARCH LOGIC ---
+function filterLibrary() {
+    const input = document.getElementById('libSearchInput');
+    const clearBtn = document.getElementById('libClearBtn');
+    const container = document.getElementById('libButtonsContainer');
+    const buttons = container.getElementsByTagName('button');
+    const divider = document.getElementById('libDivider');
+    const filter = input.value.toLowerCase().trim();
+
+    // Show/Hide the "X" button based on text input
+    clearBtn.style.display = filter.length > 0 ? 'block' : 'none';
+
+    // Filter the library items
+    let hasResults = false;
+    for (let i = 0; i < buttons.length; i++) {
+        let btnText = buttons[i].textContent || buttons[i].innerText;
+        if (btnText.toLowerCase().includes(filter)) {
+            buttons[i].style.display = ""; 
+            hasResults = true;
+        } else {
+            buttons[i].style.display = "none";
+        }
+    }
+
+    // Hide the divider if we are searching
+    if (divider) {
+        divider.style.display = (filter === "" && hasResults) ? "block" : "none";
+    }
+}
+
+function clearLibSearch() {
+    const input = document.getElementById('libSearchInput');
+    if (input) {
+        input.value = ""; 
+        filterLibrary(); // Resets the list to show all items
+        input.focus();   // Keeps the cursor in the box for a new search
+    }
+}
+
+// --- DASHBOARD LOGIC ---
+const mainContainer = document.getElementById('mainContainer');
+const thumb = document.getElementById('scrollThumb');
+const track = document.getElementById('scrollTrack');
+const musicBar = document.getElementById('musicBar');
+
+let isPlaying = true;
+let currentSongIndex = 0;
+const songCards = document.querySelectorAll('#recentlyPlayed .card');
+const playPauseBtn = document.querySelector('.play-pause');
+
+function updatePlayer(index) {
+    const card = songCards[index];
+    const name = card.querySelector('.card-title').textContent;
+    const artist = card.querySelector('.card-subtitle').textContent;
+    const img = card.querySelector('img').src;
+    document.querySelector('.music-info img').src = img;
+    document.querySelector('.song-name').textContent = name;
+    document.querySelector('.song-artist').textContent = artist + " • Tweak Artist";
+    document.getElementById('mainLikeBtn').classList.remove('liked');
+    currentSecs = 0;
+    updateQueueList();
+}
+
+function playSelected(index) {
+    currentSongIndex = index; updatePlayer(index); isPlaying = true;
+    playPauseBtn.innerHTML = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+}
+
+playPauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); isPlaying = !isPlaying;
+    playPauseBtn.innerHTML = isPlaying ? 
+        '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>' : 
+        '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    showToast(isPlaying ? "Resumed" : "Paused");
+});
+
+document.getElementById('nextBtn').addEventListener('click', (e) => {
+    if(e) e.stopPropagation();
+    currentSongIndex = (currentSongIndex + 1) % songCards.length;
+    updatePlayer(currentSongIndex); showToast("Skipped Forward");
+});
+
+document.getElementById('prevBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentSongIndex = (currentSongIndex - 1 + songCards.length) % songCards.length;
+    updatePlayer(currentSongIndex); showToast("Skipped Backward");
+});
+
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    // 1. Toggle active class
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+
+    const category = this.getAttribute('data-category');
+    
+    // 2. Filter all cards (mix-cards and standard cards)
+    const allContent = document.querySelectorAll('.mix-card, .card');
+    
+    allContent.forEach(item => {
+      const itemType = item.getAttribute('data-type');
+      
+      if (category === 'all' || itemType === category) {
+        item.style.display = 'flex'; // or 'block' for .card
+        if(item.classList.contains('card')) item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+});
+
+// --- LIKE LOGIC ---
+function toggleLike(event) {
+    event.stopPropagation();
+    const btn = document.getElementById('mainLikeBtn');
+    const isLiked = btn.classList.toggle('liked');
+    showToast(isLiked ? "Added to Liked Songs" : "Removed from Liked Songs");
+}
+
+// --- LYRICS LOGIC ---
+function toggleLyrics(show) {
+    const overlay = document.getElementById('lyricsOverlay');
+    const body = document.getElementById('lyricsBody');
+    const name = document.querySelector('.song-name').textContent;
+    const artist = document.querySelector('.song-artist').textContent;
+
+    if (show) {
+        document.getElementById('lyricsSongName').textContent = name;
+        document.getElementById('lyricsSongArtist').textContent = artist;
+        body.innerHTML = `<p class="active-line">Watching the city lights fade</p><p>Moving through the midnight shade</p><p>Every beat is a memory made</p><p>In the rhythm where we both stayed</p><br><p>Tweak the sound, feel the bass</p><p>Lost inside this digital space</p><p>Find the vibe at your own pace</p><p>In the glow of a neon face</p>`;
+        overlay.style.display = 'flex';
+    } else {
+        overlay.style.display = 'none';
+    }
+}
+
+// --- FULLSCREEN LOGIC ---
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => { showToast(`Error: ${err.message}`); });
+        showToast("Full Screen Enabled");
+    } else {
+        if (document.exitFullscreen) { document.exitFullscreen(); showToast("Full Screen Disabled"); }
+    }
+}
+
+// --- DOWNLOAD LOGIC ---
+function handleDownload() {
+    const songName = document.querySelector('.song-name').textContent;
+    showToast(`Downloading ${songName}...`);
+    const dummyContent = "Simulated Audio Data";
+    const blob = new Blob([dummyContent], { type: 'audio/mpeg' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${songName}_Tweak.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+
+// --- SHARE LOGIC ---
+function handleShare() {
+    const songName = document.querySelector('.song-name').textContent;
+    const artist = document.querySelector('.song-artist').textContent;
+    const shareText = `Listening to "${songName}" by ${artist} on Tweak Music!`;
+    if (navigator.share) {
+        navigator.share({ title: 'Tweak Music', text: shareText, url: window.location.href }).catch(() => copyToClipboard(shareText));
+    } else { copyToClipboard(shareText); }
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => { showToast("Link copied to clipboard!"); });
+}
+
+// --- QUEUE LOGIC ---
+function updateQueueList() {
+    const list = document.getElementById('queueList');
+    list.innerHTML = "";
+    for(let i = 1; i <= 3; i++) {
+        let idx = (currentSongIndex + i) % songCards.length;
+        let name = songCards[idx].querySelector('.card-title').textContent;
+        let artist = songCards[idx].querySelector('.card-subtitle').textContent;
+        let div = document.createElement('div');
+        div.className = "queue-item";
+        div.innerHTML = `<div style="font-weight:600">${name}</div><div style="font-size:11px; color:var(--text-dim)">${artist}</div>`;
+        div.onclick = () => playSelected(idx);
+        list.appendChild(div);
+    }
+}
+
+// --- VOLUME LOGIC ---
+let lastVol = 70;
+let isMuted = false;
+
+function handleVolume(val) {
+    const svg = document.getElementById('volSvg');
+    const slider = document.getElementById('volSlider');
+    
+    // Update the visual background fill of the slider
+    slider.style.background = `linear-gradient(to right, var(--accent) ${val}%, #444 ${val}%)`;
+
+    if(val == 0) {
+        isMuted = true;
+        svg.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6m0-6l6 6"/>';
+    } else {
+        isMuted = false; 
+        lastVol = val;
+        svg.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>';
+    }
+    
+    // NOTE: To make volume affect a real audio track later, uncomment and use:
+    // if (myAudioElement) myAudioElement.volume = val / 100;
+}
+
+function toggleMute() {
+    const slider = document.getElementById('volSlider');
+    if(!isMuted) { 
+        slider.value = 0; 
+        handleVolume(0); 
+        showToast("Muted"); 
+    } else { 
+        slider.value = lastVol; 
+        handleVolume(lastVol); 
+        showToast("Unmuted"); 
+    }
+}
+
+function handleBarClick(e) {
+    if(musicBar.classList.contains('collapsed')) { musicBar.classList.remove('collapsed'); } 
+    else if(e.target.closest('.music-info')) { musicBar.classList.add('collapsed'); }
+}
+
+function updateThumb() {
+    const scrollPercent = mainContainer.scrollTop / (mainContainer.scrollHeight - mainContainer.clientHeight);
+    const maxTop = track.clientHeight - thumb.clientHeight - 10;
+    thumb.style.top = (20 + (scrollPercent * maxTop)) + 'px';
+}
+mainContainer.addEventListener('scroll', updateThumb);
+
+function toggleControl(btn, name) {
+    btn.classList.toggle('active');
+    showToast(name + ' is now ' + (btn.classList.contains('active') ? 'ON' : 'OFF'));
+}
+
+function scrollSection(id, amount) {
+  document.getElementById(id).scrollBy({ left: amount, behavior: 'smooth' });
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function toggleMenu(id, event){
+  if(event) event.stopPropagation();
+  const menu=document.getElementById(id);
+  const isOpen = menu.style.display === 'flex';
+  document.querySelectorAll('.hamburger-menu, .library-menu, .profile-menu, .queue-menu, .song-options-menu').forEach(m => m.style.display = 'none');
+  if(!isOpen) { menu.style.display = 'flex'; if(id === 'queueMenu') updateQueueList(); }
+}
+
+document.addEventListener('click',() => {
+  document.querySelectorAll('.hamburger-menu, .library-menu, .profile-menu, .queue-menu, .song-options-menu').forEach(m=>m.style.display='none');
+});
+
+window.onload = () => { 
+    updateThumb(); 
+    updateQueueList(); 
+    handleVolume(document.getElementById('volSlider').value); // Initialize volume slider visual
+};
+
+// Run this when the dashboard loads
+window.onload = function() {
+    const savedUsername = localStorage.getItem('userName');
+    const profileDisplay = document.getElementById('profile-name'); // Ensure your icon/label has this ID
+
+    if (savedUsername && profileDisplay) {
+        profileDisplay.textContent = savedUsername;
+    }
+};
+
+</script>
+
+<script src="js/songs.js"></script>
+<script src="js/player.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/library.js"></script>
+<script src="js/search.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/ui.js"></script>
+
+<script>
+// Enhanced Dashboard JavaScript with YouTube Integration
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardContent();
+    initializePlayer();
+    updateAuthUI();
+    checkAuthState();
+    trackAnalytics('page_view', { page: 'dashboard' });
+});
+
+// Load dashboard content with real songs
+function loadDashboardContent() {
+    const songs = getSongs();
+    const trendingSongs = getTrendingSongs();
+    const userPlaylists = getUserPlaylists();
+    
+    // Load top mixes with real songs
+    loadTopMixes(trendingSongs.slice(0, 6));
+    
+    // Load made for you section
+    loadMadeForYou(trendingSongs.slice(6, 10));
+    
+    // Load recently played
+    loadRecentlyPlayed(songs.slice(0, 8));
+    
+    // Load user playlists
+    loadUserPlaylistsSection(userPlaylists);
+    
+    // Load trending songs
+    loadTrendingSection(trendingSongs.slice(0, 10));
+}
+
+function loadTopMixes(songs) {
+    const container = document.querySelector('.top-mixes-grid');
+    if (!container) return;
+    
+    container.innerHTML = songs.map(song => `
+        <div class="mix-card" onclick="playSong('${song.id}')" data-type="music">
+            <img src="${song.coverImage}" alt="${song.title}">
+            <span>${song.title}</span>
+        </div>
+    `).join('');
+}
+
+function loadMadeForYou(songs) {
+    const container = document.querySelector('.section .cards-grid');
+    if (!container) return;
+    
+    container.innerHTML = songs.map(song => `
+        <div class="card" onclick="playSong('${song.id}')" data-type="music">
+            <div class="song-card-image">
+                <img src="${song.coverImage}" alt="${song.title}">
+                <div class="song-card-overlay">
+                    <button class="play-btn-overlay" onclick="event.stopPropagation(); playSong('${song.id}')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="card-title">${song.title}</div>
+            <div class="card-subtitle">${song.artist}</div>
+        </div>
+    `).join('');
+}
+
+function loadRecentlyPlayed(songs) {
+    // Add recently played section if it doesn't exist
+    const mainContainerEl = document.getElementById('mainContainer');
+    const existingSection = document.getElementById('recentlyPlayed');
+    
+    if (!existingSection) {
+        const section = document.createElement('div');
+        section.className = 'section';
+        section.id = 'recentlyPlayed';
+        section.innerHTML = `
+            <div class="section-header">
+                <div class="section-title">Recently Played</div>
+                <span class="show-all">Show all</span>
+            </div>
+            <div class="cards-grid"></div>
+        `;
+        mainContainerEl.insertBefore(section, mainContainerEl.children[1]);
+    }
+    
+    const container = document.querySelector('#recentlyPlayed .cards-grid');
+    if (container) {
+        container.innerHTML = songs.map(song => `
+            <div class="card" onclick="playSong('${song.id}')" data-type="music">
+                <div class="song-card-image">
+                    <img src="${song.coverImage}" alt="${song.title}">
+                    <div class="song-card-overlay">
+                        <button class="play-btn-overlay" onclick="event.stopPropagation(); playSong('${song.id}')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-title">${song.title}</div>
+                <div class="card-subtitle">${song.artist}</div>
+        `).join('');
+    }
+}
+
+function loadUserPlaylistsSection(playlists) {
+    // Add playlists section if it doesn't exist
+    const mainContainerEl = document.getElementById('mainContainer');
+    const existingSection = document.getElementById('userPlaylistsSection');
+    
+    if (!existingSection && playlists.length > 0) {
+        const section = document.createElement('div');
+        section.className = 'section';
+        section.id = 'userPlaylistsSection';
+        section.innerHTML = `
+            <div class="section-header">
+                <div class="section-title">Your Playlists</div>
+                <span class="show-all" onclick="window.location.href='library.html'">Show all</span>
+            </div>
+            <div class="cards-grid"></div>
+        `;
+        mainContainerEl.appendChild(section);
+    }
+    
+    const container = document.querySelector('#userPlaylistsSection .cards-grid');
+    if (container && playlists.length > 0) {
+        container.innerHTML = playlists.slice(0, 6).map(playlist => `
+            <div class="card" onclick="window.location.href='playlist.html?id=${playlist.id}'" data-type="playlist">
+                <div class="song-card-image">
+                    <img src="${playlist.coverImage}" alt="${playlist.name}">
+                </div>
+                <div class="card-title">${playlist.name}</div>
+                <div class="card-subtitle">${playlist.songs.length} songs</div>
+            </div>
+        `).join('');
+    }
+}
+
+function loadTrendingSection(songs) {
+    // Add trending section if it doesn't exist
+    const mainContainerEl = document.getElementById('mainContainer');
+    const existingSection = document.getElementById('trendingSection');
+    
+    if (!existingSection) {
+        const section = document.createElement('div');
+        section.className = 'section';
+        section.id = 'trendingSection';
+        section.innerHTML = `
+            <div class="section-header">
+                <div class="section-title">Trending Now</div>
+                <span class="show-all" onclick="window.location.href='search.html'">Show all</span>
+            </div>
+            <div class="cards-grid"></div>
+        `;
+        mainContainerEl.appendChild(section);
+    }
+    
+    const container = document.querySelector('#trendingSection .cards-grid');
+    if (container) {
+        container.innerHTML = songs.map(song => `
+            <div class="card" onclick="playSong('${song.id}')" data-type="music">
+                <div class="song-card-image">
+                    <img src="${song.coverImage}" alt="${song.title}">
+                    <div class="song-card-overlay">
+                        <button class="play-btn-overlay" onclick="event.stopPropagation(); playSong('${song.id}')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-title">${song.title}</div>
+                <div class="card-subtitle">${song.artist}</div>
+            </div>
+        `).join('');
+    }
+}
+
+function toggleControl(btn, name) {
+    btn.classList.toggle('active');
+    showToast(name + ' is now ' + (btn.classList.contains('active') ? 'ON' : 'OFF'));
+}
+
+// Update volume slider visual
+function handleVolume(val) {
+    const slider = document.getElementById('volSlider');
+    if (slider) {
+        slider.style.background = `linear-gradient(to right, var(--accent) ${val}%, #444 ${val}%)`;
+    }
+}
+
+// Initialize volume slider visual on load
+document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.getElementById('volSlider');
+    if (slider) {
+        handleVolume(slider.value);
+    }
+});
+
+// Enhanced scroll functionality
+function updateThumb() {
+    const container = document.getElementById('mainContainer');
+    const thumb = document.getElementById('scrollThumb');
+    const track = document.getElementById('scrollTrack');
+    
+    if (!container || !thumb || !track) return;
+    
+    const scrollPercent = container.scrollTop / (container.scrollHeight - container.clientHeight);
+    const maxTop = track.clientHeight - thumb.clientHeight - 10;
+    thumb.style.top = (20 + (scrollPercent * maxTop)) + 'px';
+}
+
+const container = document.getElementById('mainContainer');
+if (container) {
+    container.addEventListener('scroll', updateThumb);
+}
+
+window.onload = () => { 
+    updateThumb(); 
+    updateQueueUI(); 
+    handleVolume(document.getElementById('volSlider').value);
+};
+
+// Run this every 10 seconds to update total time spent
+setInterval(() => {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        let totalTime = parseInt(localStorage.getItem('totalTimeSpent') || "0");
+        totalTime += 10; // add 10 seconds
+        localStorage.setItem('totalTimeSpent', totalTime.toString());
+    }
+}, 10000);
+
+function checkBanStatus() {
+    const currentUserName = localStorage.getItem('userName');
+    if (!currentUserName) return;
+
+    const accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+    const user = accounts.find(acc => acc.username === currentUserName);
+
+    if (user && user.status === 'Banned') {
+        const now = Date.now();
+        // Check if ban is still valid
+        if (!user.banUntil || now < user.banUntil) {
+            alert("Your account is currently suspended. Please contact support.");
+            localStorage.clear(); // Log them out
+            window.location.href = 'login.html';
+        } else {
+            // Ban expired! Update their status to Active
+            user.status = 'Active';
+            delete user.banUntil;
+            localStorage.setItem('tweak_accounts_data', JSON.stringify(accounts));
+        }
+    }
+}
+
+// Run this check whenever the app loads
+checkBanStatus();
+
+</script>
+
+</body>
+</html>

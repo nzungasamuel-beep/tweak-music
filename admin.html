@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Tweak Music</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #ff2a5f; --bg: #121212; --card: #181818; --modal-bg: rgba(0,0,0,0.85); }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 40px; }
+        .admin-container { max-width: 1000px; margin: 0 auto; }
+        h1 { color: var(--accent); font-weight: 700; border-bottom: 1px solid #333; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #333; }
+        .stat-card h3 { margin: 0; font-size: 12px; color: #b3b3b3; text-transform: uppercase; }
+        .stat-card p { margin: 10px 0 0; font-size: 24px; font-weight: 700; color: var(--accent); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th { text-align: left; padding: 15px; background: #1f1f1f; color: #888; font-size: 12px; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #222; font-size: 14px; }
+        .status-pill { padding: 4px 8px; border-radius: 4px; font-size: 10px; color: white; font-weight: 600; text-transform: uppercase; }
+        .btn-ban { background: none; border: 1px solid #ff2a5f; color: #ff2a5f; cursor: pointer; border-radius: 4px; padding: 6px 12px; font-size: 12px; transition: 0.3s; }
+        .btn-ban:hover { background: #ff2a5f; color: white; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--modal-bg); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 15px; border: 1px solid var(--accent); width: 400px; }
+        .modal-content h2 { margin-top: 0; color: var(--accent); font-size: 20px; }
+        .modal-field { margin-bottom: 15px; }
+        .modal-field label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+        .modal-field select, .modal-field input { width: 100%; padding: 10px; background: #222; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-btn { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; border: none; }
+        .save-btn { background: var(--accent); color: white; }
+        .cancel-btn { background: #333; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h1>Admin Control Panel <a href="index.html" style="font-size: 12px; color: #888; text-decoration: none;">Back to App</a></h1>
+
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Total Registered</h3><p id="totalUsers">0</p></div>
+            <div class="stat-card"><h3>Banned Accounts</h3><p id="bannedUsers">0</p></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>User Details</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Duration</th> 
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+        </table>
+    </div>
+
+    <div id="banModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalUserName">Set Ban Period</h2>
+            <div class="modal-field">
+                <label>Ban Type</label>
+                <select id="banTypeSelect" onchange="toggleBanInputs()">
+                    <option value="perm">Permanent</option>
+                    <option value="temp">Temporary</option>
+                </select>
+            </div>
+            <div id="tempInputs" style="display: none;">
+                <div class="modal-field">
+                    <label>Duration Unit</label>
+                    <select id="banUnitSelect">
+                        <option value="1">Hours</option>
+                        <option value="2">Weeks</option>
+                        <option value="3">Months</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label>Amount</label>
+                    <input type="number" id="banAmountInput" placeholder="Enter number..." min="1">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn save-btn" onclick="saveBan()">Apply Ban</button>
+            </div>
+
+            <div class="input-group" style="margin-top:15px;">
+    <label style="color:#888; font-size:12px;">Reason for Ban</label>
+    <textarea id="banReasonInput" placeholder="e.g. Unusual login activity or Terms violation" 
+              style="width:100%; background:#2a2a2a; border:1px solid #333; color:white; border-radius:8px; padding:10px; margin-top:5px; font-family:inherit;"></textarea>
+</div>
+        </div>
+    </div>
+
+    <script>
+    let activeUserForBan = null;
+
+    function renderUsers() {
+        const userTableBody = document.getElementById('userTableBody'); 
+        const totalUsersEl = document.getElementById('totalUsers');
+        const bannedUsersEl = document.getElementById('bannedUsers');
+        
+        const accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+        const sessionHistory = JSON.parse(localStorage.getItem('tweak_session_history') || "[]");
+
+        if (totalUsersEl) totalUsersEl.innerText = accounts.length;
+
+        const calculateDuration = (startTime) => {
+            if (!startTime) return "---";
+            const diff = Date.now() - startTime;
+            const mins = Math.floor(diff / 60000);
+            const hrs = Math.floor(mins / 60);
+            return hrs > 0 ? `${hrs}h ${mins % 60}m` : `${mins}m`;
+        };
+
+        if (userTableBody) {
+            let activeBans = 0;
+            userTableBody.innerHTML = accounts.map(account => {
+                const now = Date.now();
+                const isCurrentlyBanned = account.status === 'Banned' && (!account.banUntil || now < account.banUntil);
+                if (isCurrentlyBanned) activeBans++;
+                
+                const userSessions = sessionHistory.filter(s => s.user === account.username).reverse();
+                const lastSession = userSessions[0] || {};
+                const duration = calculateDuration(lastSession.loginTimestamp);
+
+                let statusLabel = isCurrentlyBanned ? 'Banned' : 'Active';
+                if (isCurrentlyBanned && account.banUntil) {
+                    const diff = account.banUntil - now;
+                    const hrsLeft = Math.floor(diff / 3600000);
+                    const daysLeft = Math.floor(hrsLeft / 24);
+                    statusLabel += daysLeft > 0 ? ` (${daysLeft}d left)` : ` (${hrsLeft}h left)`;
+                }
+
+                return `
+                    <tr>
+                        <td><strong>${account.username}</strong><div style="font-size: 10px; color: #888;">${account.email || ''}</div></td>
+                        <td><span class="status-pill" style="background: ${isCurrentlyBanned ? '#ff2a5f' : '#1db954'}">${statusLabel}</span></td>
+                        <td>${lastSession.loginTime || '---'}</td>
+                        <td style="color: #ff2a5f; font-weight: 600;">${duration}</td>
+                        <td>
+                            <button class="btn-ban" onclick="handleBanClick('${account.username}', ${isCurrentlyBanned})">
+                                ${isCurrentlyBanned ? 'Lift Ban' : 'Ban User'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            if (bannedUsersEl) bannedUsersEl.innerText = activeBans;
+        }
+    }
+
+    function handleBanClick(username, isBanned) {
+        if (isBanned) {
+            if (confirm(`Lift ban for ${username}?`)) liftBan(username);
+        } else {
+            activeUserForBan = username;
+            document.getElementById('modalUserName').innerText = `Ban ${username}`;
+            document.getElementById('banModal').style.display = 'flex';
+        }
+    }
+
+    function toggleBanInputs() {
+        const isTemp = document.getElementById('banTypeSelect').value === 'temp';
+        document.getElementById('tempInputs').style.display = isTemp ? 'block' : 'none';
+    }
+
+    function closeModal() {
+        document.getElementById('banModal').style.display = 'none';
+        activeUserForBan = null;
+        document.getElementById('banAmountInput').value = '';
+    }
+
+    function liftBan(username) {
+        let accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+        const idx = accounts.findIndex(acc => acc.username === username);
+        if (idx !== -1) {
+            accounts[idx].status = 'Active';
+            delete accounts[idx].banUntil;
+            localStorage.setItem('tweak_accounts_data', JSON.stringify(accounts));
+            renderUsers();
+        }
+    }
+
+    function saveBan() {
+    if (!activeUserForBan) return;
+    
+    let accounts = JSON.parse(localStorage.getItem('tweak_accounts_data') || "[]");
+    const idx = accounts.findIndex(acc => acc.username === activeUserForBan);
+    
+    // Get values from your modal
+    const type = document.getElementById('banTypeSelect').value;
+    const reason = document.getElementById('banReasonInput').value || "Violation of community guidelines";
+    const userEmail = accounts[idx].email;
+
+    if (idx !== -1) {
+        let durationText = "";
+        accounts[idx].status = 'Banned';
+
+        if (type === 'perm') {
+            accounts[idx].banUntil = null;
+            durationText = "Permanent";
+        } else {
+            const unit = document.getElementById('banUnitSelect').value;
+            const amount = parseInt(document.getElementById('banAmountInput').value);
+            if (!amount) return alert("Please enter a valid amount.");
+
+            let msToAdd = 0;
+            let unitName = "";
+            if (unit === "1") { msToAdd = amount * 3600000; unitName = "Hour(s)"; }
+            if (unit === "2") { msToAdd = amount * 604800000; unitName = "Week(s)"; }
+            if (unit === "3") { msToAdd = amount * 2592000000; unitName = "Month(s)"; }
+            
+            accounts[idx].banUntil = Date.now() + msToAdd;
+            durationText = `${amount} ${unitName}`;
+        }
+
+        // --- NEW: Email Notification Logic ---
+        const banParams = {
+    to_email: userEmail,
+    name: activeUserForBan,
+    subject_type: "Account Notice", // <--- Add this
+    message: `Account Restricted. Reason: ${reason}. Duration: ${durationText}.`,
+    recovery_url: "#"
+};
+emailjs.send("service_i554v5c", "template_5k5jykh", templateParams);
+            .then(() => {
+                console.log("Ban notice sent to user.");
+            })
+            .catch(err => console.error("Email failed:", err));
+        // --------------------------------------
+
+        localStorage.setItem('tweak_accounts_data', JSON.stringify(accounts));
+        closeBanModal();
+        renderUsers();
+        alert(`User ${activeUserForBan} has been banned.`);
+    }
+}
+    </script>
+</body>
+</html>
