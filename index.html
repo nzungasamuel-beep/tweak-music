@@ -338,13 +338,54 @@ body{
   transform:translateY(-5px);
   background:var(--bg-menu-hover);
 }
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
 .card img{
   width:100%;
-  aspect-ratio:1/1;
+  height:100%;
   object-fit:cover;
   border-radius:8px;
-  margin-bottom:12px;
   box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card:hover img {
+  box-shadow: 0 8px 24px rgba(255, 42, 95, 0.4);
+  transform: scale(1.02);
+}
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 8px 24px rgba(255, 42, 95, 0.5);
+}
+.card-img-wrapper:hover .play-button-overlay {
+  transform: translate(-50%, -50%) scale(1);
+}
+.play-button-overlay:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 12px 32px rgba(255, 42, 95, 0.6);
+}
+.play-button-overlay svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+  margin-left: 2px;
 }
 .card-title{ font-size:15px; font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .card-subtitle{ font-size:13px; color:var(--text-dim); }
@@ -755,7 +796,12 @@ body{
         <img src="https://picsum.photos/seed/mix1/80"><span>Top Gaming Tracks</span>
     </div>
     <div class="card" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
-        <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+        <div class="card-img-wrapper">
+            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+            <div class="play-button-overlay" onclick="event.stopPropagation(); playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
+                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
         <div class="card-title">Isaka II (6am) [With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)</div>
         <div class="card-subtitle">Ciza, Tems & Omah Lay</div>
     </div>
@@ -769,12 +815,22 @@ body{
     <div class="section-title">Made For You</div>
     <div class="cards-grid">
       <div class="card" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
-        <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
+        <div class="card-img-wrapper">
+          <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
         <div class="card-title">BANANA!</div>
         <div class="card-subtitle">JELEEL</div>
       </div>
       <div class="card" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran', 'https://picsum.photos/seed/m2/200')">
-        <img src="https://picsum.photos/seed/m2/200">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/m2/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran', 'https://picsum.photos/seed/m2/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
         <div class="card-title">Daily Mix 2</div>
         <div class="card-subtitle">Lojay, Melvitto...</div>
       </div>
