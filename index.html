@@ -591,6 +591,16 @@ body{
   align-items: center;
 }
 
+.progress-fill {
+  position: absolute;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 0%;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
 .progress-slider {
   -webkit-appearance: none;
   width: 100%;
@@ -789,6 +799,7 @@ body{
         <div class="progress-container">
             <span class="time-text" id="currentTime">0:00</span>
             <div class="progress-bar-container">
+                <div class="progress-fill" id="progressFill"></div>
                 <input type="range" id="progressSlider" class="progress-slider" min="0" max="100" value="0">
             </div>
             <span class="time-text" id="durationTime">0:00</span>
@@ -807,6 +818,15 @@ body{
 var player;
 let isVideoPlaying = false;
 const API_KEY = 'AIzaSyDY_LSxTxIwsOW1m72OVfGQLycubRUEwIw'; // Your YouTube API Key
+
+// Playlist management
+let playlist = [
+    { id: 'dQw4w9WgXcQ', title: 'Top Gaming Tracks', artist: 'Various Artists', img: 'https://picsum.photos/seed/mix1/80' },
+    { id: 'E1mZuIgYW1g', title: 'Isaka II (6am)', artist: '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', img: 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg' },
+    { id: 'S1onMipzkq8', title: 'BANANA!', artist: 'JELEEL!', img: 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg' },
+    { id: 'JGwWNGJdvx8', title: 'Daily Mix 2', artist: 'Ed Sheeran', img: 'https://picsum.photos/seed/m2/200' }
+];
+let currentSongIndex = -1;
 
 // 2. YOUTUBE API INITIALIZATION
 function onYouTubeIframeAPIReady() {
@@ -914,15 +934,19 @@ function handleSearchKeyPress(event) {
 function playSong(id, title, artist, img) {
     if (!player || !player.loadVideoById) return;
 
-    // UPDATED: Corrected the variable declaration error here
+    // Update current song index if it exists in playlist
+    const songIndex = playlist.findIndex(song => song.id === id);
+    if (songIndex !== -1) {
+        currentSongIndex = songIndex;
+    }
+
     player.loadVideoById(id);
+    player.playVideo();
     
-    document.getElementById('currentSongTitle').innerText = title;
-    document.getElementById('currentSongArtist').innerText = artist;
-    document.getElementById('currentSongImg').src = img;
-    
-    // Show the player bar if it was hidden
-    document.querySelector('.music-player-bar').style.display = 'flex';
+    // Update music bar with song info
+    document.querySelector('.song-name').textContent = title;
+    document.querySelector('.song-artist').textContent = artist;
+    document.querySelector('.music-info img').src = img;
 }
 
 // 5. INITIALIZATION & EVENT LISTENERS
@@ -943,6 +967,30 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // Previous Button - Play previous song in playlist
+    const prevBtn = document.getElementById('prevBtn');
+    if (prevBtn) {
+        prevBtn.onclick = function() {
+            if (currentSongIndex > 0) {
+                currentSongIndex--;
+                const song = playlist[currentSongIndex];
+                playSong(song.id, song.title, song.artist, song.img);
+            }
+        };
+    }
+
+    // Next Button - Play next song in playlist
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) {
+        nextBtn.onclick = function() {
+            if (currentSongIndex < playlist.length - 1) {
+                currentSongIndex++;
+                const song = playlist[currentSongIndex];
+                playSong(song.id, song.title, song.artist, song.img);
+            }
+        };
+    }
+
     // Progress Bar Logic
     const progressSlider = document.getElementById('progressSlider');
     if (progressSlider) {
@@ -953,6 +1001,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+
+    // Update progress bar in real-time
+    setInterval(() => {
+        if (player && player.getCurrentTime && player.getDuration) {
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                const progress = (currentTime / duration) * 100;
+                progressSlider.value = progress;
+                
+                // Update progress fill visual
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = progress + '%';
+                }
+                
+                // Update time displays
+                document.getElementById('currentTime').textContent = formatTime(currentTime);
+                document.getElementById('durationTime').textContent = formatTime(duration);
+            }
+        }
+    }, 500);
 
     // Volume Slider Logic
     const volSlider = document.getElementById('volSlider');
@@ -966,6 +1037,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize UI
     updateAuthUI();
 });
+
+function formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
 
 function updateAuthUI() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
