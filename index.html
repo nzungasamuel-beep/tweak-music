@@ -183,6 +183,14 @@ body{
   border-color: var(--accent);
 }
 
+.cards-grid.search-active {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  overflow-x: hidden;
+  overflow-y: visible;
+  gap: 20px;
+}
+
 .profile-icon{
   display:flex;
   width:38px;
@@ -594,6 +602,12 @@ body{
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+.card-img-container img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: #282828; /* Acts as a placeholder color while loading */
+}
+
 .card:hover img {
     box-shadow: 0 8px 24px rgba(255, 42, 95, 0.4); /* Glow effect using your --accent */
 }
@@ -635,11 +649,15 @@ body{
   <div id="userProfile" class="profile-icon" style="display: none;">
       <svg ...></svg>
   </div>
-  <div class="search-wrapper" id="searchWrapper" style="display: none;">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search...">
-  </div>
-  <button class="search-btn" id="searchBtn" onclick="activateSearch()">Search</button>
+  <div class="search-wrapper" id="searchWrapper" style="display: align-items center;">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search..."
+      onkeyup="handleSearchKeyPress(event)">
+  <button class="clear-search-btn" id="clearSearchBtn" onclick="resetSearch()" style="display: none;">&times;</button>
 </div>
+
+  <button class="search-btn" id="searchBtn" onclick="activateSearch()">Search</button>
+    </div>
+  </div>
 </header>
 
 <div class="main-sections">
@@ -649,20 +667,20 @@ body{
     <div class="mix-card" onclick="playSong('dQw4w9WgXcQ', 'Top Gaming Tracks', 'Various Artists', 'https://picsum.photos/seed/mix1/80')">
         <img src="https://picsum.photos/seed/mix1/80"><span>Top Gaming Tracks</span>
     </div>
-    <div class="card" onclick="playSong('E1mZuIgYW1g', 'Water', 'Tyla', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
+    <div class="card" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
         <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
-        <div class="card-title">Water</div>
-        <div class="card-subtitle">Tyla</div>
+        <div class="card-title">Isaka II (6am) [With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)</div>
+        <div class="card-subtitle">Ciza, Tems & Omah Lay</div>
     </div>
   </div>
 
   <div class="section">
     <div class="section-title">Made For You</div>
     <div class="cards-grid">
-      <div class="card" onclick="playSong('S1onMipzkq8', 'Gangnam Style', 'PSY', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
+      <div class="card" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
         <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
-        <div class="card-title">Gangnam Style</div>
-        <div class="card-subtitle">PSY</div>
+        <div class="card-title">BANANA!</div>
+        <div class="card-subtitle">JELEEL</div>
       </div>
       <div class="card" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran', 'https://picsum.photos/seed/m2/200')">
         <img src="https://picsum.photos/seed/m2/200">
@@ -705,66 +723,76 @@ body{
 
 <script>
   // --- 1. GLOBAL STATE & CONFIG ---
+var player;
 let player;
 let progressInterval;
+let progressTimer;
 let currentIndex = -1;
-const API_KEY = 'AIzaSyCmRQDgxZfvZYjK7rDCjKCysmMYoj7V2Ek'; // Your YouTube API Key
+const API_KEY = 'AIzaSyDY_LSxTxIwsOW1m72OVfGQLycubRUEwIw'; // Your YouTube API Key
 
-// --- 2. YOUTUBE IFRAME API ---
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-player', {
-        height: '0', width: '0', videoId: '', 
-        playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 },
+        height: '0',
+        width: '0',
+        playerVars: {
+            'autoplay': 0,
+            'controls': 0,
+            'disablekb': 1,
+            'rel': 0,
+            'modestbranding': 1
+        },
         events: {
-            'onStateChange': onPlayerStateChange,
-            'onReady': () => console.log("YouTube Engine Ready")
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
         }
     });
 }
 
 function onPlayerStateChange(event) {
-    const playPauseBtn = document.querySelector('.play-pause');
-    if (event.data === YT.PlayerState.PLAYING) {
-        playPauseBtn.innerHTML = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-        startProgressTimer();
-    } else {
-        playPauseBtn.innerHTML = '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        clearInterval(progressInterval);
+    const masterPlay = document.getElementById('masterPlay');
+    // If playing, show Pause icon
+    if (event.data == YT.PlayerState.PLAYING) {
+        masterPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+    } 
+    // If paused or ended, show Play icon
+    else {
+        masterPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>`;
     }
 }
 
 // --- 3. CORE PLAYBACK ENGINE ---
-function playSong(videoId, title, artist, img) {
-    if (player && player.loadVideoById) {
-        player.loadVideoById(videoId);
-        document.querySelector('.song-name').textContent = title;
-        document.querySelector('.song-artist').textContent = artist;
-        document.querySelector('.music-info img').src = img;
-        
-        // Update index for Next/Prev buttons
-        const allCards = Array.from(document.querySelectorAll('.card, .mix-card'));
-        currentIndex = allCards.findIndex(card => 
-            (card.querySelector('.card-title')?.textContent === title) || 
-            (card.querySelector('span')?.textContent === title)
-        );
-        showToast(`Playing: ${title}`);
-    }
+function playSong(id, title, artist, img) {
+    // 1. Safety check: Is the player initialized?
+  if (player && player.loadVideoById) {
+    player.loadVideoById(id);
+}
+    document.getElementById('currentSongTitle').textContent = title;
+    document.getElementById('currentSongArtist').textContent = artist;
+    document.getElementById('currentSongImg').src = img;
+    const masterPlay = document.getElementById('masterPlay');
+    masterPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+    
+    showToast(`Playing: ${title}`);
 }
 
 function startProgressTimer() {
-    clearInterval(progressInterval);
-    progressInterval = setInterval(() => {
+    // Clear any existing timer first
+    clearInterval(progressTimer);
+    
+    progressTimer = setInterval(() => {
         if (player && player.getCurrentTime) {
-            const current = player.getCurrentTime();
-            const total = player.getDuration();
-            const pct = (current / total) * 100 || 0;
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
             const slider = document.getElementById('progressSlider');
-            slider.value = pct;
-            document.getElementById('currentTime').textContent = formatTime(current);
-            document.getElementById('durationTime').textContent = formatTime(total);
-            slider.style.background = `linear-gradient(to right, var(--accent) ${pct}%, #4f4f4f ${pct}%)`;
+            
+            if (duration > 0) {
+                const percentage = (currentTime / duration) * 100;
+                slider.value = percentage;
+                // Update the 'fill' color of the slider
+                slider.style.background = `linear-gradient(to right, var(--accent) ${percentage}%, #444 ${percentage}%)`;
+            }
         }
-    }, 1000);
+    }, 1000); // Update every 1 second
 }
 
 function formatTime(seconds) {
@@ -773,20 +801,78 @@ function formatTime(seconds) {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-// --- 4. LIVE YOUTUBE SEARCH ---
+function handleSearchKeyPress(event) {
+    const query = event.target.value;
+    
+    // Toggle the clear button visibility (optional but nice)
+    toggleClearBtn(query);
+
+    // Trigger search only when "Enter" is pressed
+    if (event.key === 'Enter') {
+        performSearch(query);
+    }
+    if (event.key === 'Enter') {
+        const query = document.getElementById('searchInput').value;
+        performSearch(query);
+    }
+    onkeyup="handleSearchKeyPress(event)";
+}
+
+function resetSearch() {
+    const input = document.getElementById('searchInput');
+    const wrapper = document.getElementById('searchWrapper');
+    const searchBtn = document.getElementById('searchBtn');
+    const topMixes = document.querySelector('.top-mixes-grid');
+    const grid = document.querySelector('.cards-grid');
+
+    // 1. Remove the vertical grid layout
+    grid.classList.remove('search-active');
+
+    // 2. Clear and hide input
+    input.value = '';
+    wrapper.style.display = 'none';
+    searchBtn.style.display = 'flex';
+
+    // 3. Restore the "Home" content
+    if (topMixes) topMixes.style.display = 'grid';
+    sectionTitle.textContent = "Made For You";
+    
+    showToast("Back to Home");
+
+    document.querySelector('.section-title').textContent = "Made For You";
+    const sectionTitle = document.querySelector('.section-title');
+    if (sectionTitle) sectionTitle.textContent = "Made For You";
+    // ... rest of your code
+}
+
+function activateSearch() {
+    // Hide the main search button
+    document.getElementById('searchBtn').style.display = 'none';
+    
+    // Show the wrapper containing the input and the 'X' button
+    const wrapper = document.getElementById('searchWrapper');
+    wrapper.style.display = 'flex';
+    
+    // Auto-focus the input so you can start typing immediately
+    const input = document.getElementById('searchInput');
+    input.focus();
+}
+
+
 async function performSearch(query) {
     if (!query || !query.trim()) return;
     
-    showToast(`Searching for "${query}"...`);
+    // Clear the grid and show a loading message immediately
+    const grid = document.querySelector('.cards-grid');
+    grid.innerHTML = '<div style="color: var(--text-dim); padding: 20px;">Searching YouTube library...</div>';
     
-    // Adding "official audio" ensures better music results
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&key=${API_KEY}&q=${encodeURIComponent(query + " official audio")}`;
 
     try {
         const response = await fetch(searchUrl);
         const data = await response.json();
 
-        if (data.items) {
+        if (data.items && data.items.length > 0) {
             const results = data.items.map(item => ({
                 id: item.id.videoId,
                 title: item.snippet.title,
@@ -794,22 +880,31 @@ async function performSearch(query) {
                 img: item.snippet.thumbnails.high.url
             }));
             displaySearchResults(results);
+        } else {
+            grid.innerHTML = '<div style="color: var(--text-dim); padding: 20px;">No results found. Try a different artist!</div>';
         }
     } catch (error) {
-        console.error("Search Error:", error);
-        showToast("Error connecting to YouTube library");
+        grid.innerHTML = '<div style="color: var(--accent); padding: 20px;">Connection error. Please check your API key.</div>';
     }
 }
 
 function displaySearchResults(results) {
     const grid = document.querySelector('.cards-grid');
+    const topMixes = document.querySelector('.top-mixes-grid');
+    
+    // UI Cleanup
+    if (topMixes) topMixes.style.display = 'none';
+    grid.classList.add('search-active');
+    
     document.querySelector('.section-title').textContent = "Search Results";
-    grid.innerHTML = ''; // Clear current "Made For You" cards
+    grid.innerHTML = ''; // Clear existing cards once
 
+    // Single loop to build the cards
     results.forEach(song => {
         const card = document.createElement('div');
         card.className = 'card';
         card.onclick = () => playSong(song.id, song.title, song.artist, song.img);
+        
         card.innerHTML = `
             <img src="${song.img}">
             <div class="card-title">${song.title}</div>
@@ -817,14 +912,9 @@ function displaySearchResults(results) {
         `;
         grid.appendChild(card);
     });
-}
-
-// --- 5. UI INTERACTION HELPERS ---
-function activateSearch() {
-    document.getElementById('searchBtn').style.display = 'none';
-    const wrapper = document.getElementById('searchWrapper');
-    wrapper.style.display = 'flex';
-    document.getElementById('searchInput').focus();
+    
+    // Smooth scroll back to top
+    document.querySelector('.main-sections').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function clearSearch() {
@@ -866,13 +956,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Next/Prev Buttons
     document.getElementById('nextBtn').onclick = () => {
-        const cards = document.querySelectorAll('.card, .mix-card');
+       const cards = document.querySelectorAll('.cards-grid .card:not([style*="display: none"])');
         if (currentIndex < cards.length - 1) cards[currentIndex + 1].click();
         else cards[0].click();
     };
 
     document.getElementById('prevBtn').onclick = () => {
-        const cards = document.querySelectorAll('.card, .mix-card');
+       const cards = document.querySelectorAll('.cards-grid .card:not([style*="display: none"])');
         if (currentIndex > 0) cards[currentIndex - 1].click();
         else cards[cards.length - 1].click();
     };
@@ -884,8 +974,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    document.getElementById('masterPlay').onclick = function() {
+    if (!player || !player.getPlayerState) return;
+    
+    const state = player.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+    } else {
+        player.playVideo();
+    }
+};
+
     // Volume Slider
     const volSlider = document.getElementById('volSlider');
+    const initialVol = document.getElementById('volSlider');
+initialVol.style.background = `linear-gradient(to right, var(--accent) ${initialVol.value}%, #444 ${initialVol.value}%)`;
     volSlider.oninput = function() {
         this.style.background = `linear-gradient(to right, var(--accent) ${this.value}%, #444 ${this.value}%)`;
         if (player && player.setVolume) player.setVolume(this.value);
