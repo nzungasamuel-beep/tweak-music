@@ -232,10 +232,10 @@ body{
 
 .cards-grid.search-active {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   overflow-x: hidden;
   overflow-y: visible;
-  gap: 20px;
+  gap: 15px;
 }
 
 .profile-icon{
@@ -316,8 +316,8 @@ body{
 .nav-arrow:hover { background: var(--bg-menu-hover); border-color: var(--accent); }
 
 .cards-grid{
-  display: flex;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
   scroll-behavior: smooth;
   padding-bottom: 10px;
@@ -328,15 +328,17 @@ body{
 .card{
   background:var(--bg-card);
   padding:15px;
-  border-radius:12px;
+  border-radius:16px;
   cursor:pointer;
-  transition: transform 0.2s, background 0.2s;
-  min-width: 180px; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
   user-select:none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 .card:hover{
-  transform:translateY(-5px);
+  transform: translateY(-8px);
   background:var(--bg-menu-hover);
+  box-shadow: 0 12px 24px rgba(255, 42, 95, 0.2);
 }
 .card-img-wrapper {
   position: relative;
@@ -344,26 +346,26 @@ body{
   aspect-ratio: 1/1;
   margin-bottom: 12px;
   cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
 }
 .card img{
   width:100%;
   height:100%;
   object-fit:cover;
-  border-radius:8px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.3);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border-radius:12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .card:hover img {
-  box-shadow: 0 8px 24px rgba(255, 42, 95, 0.4);
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 .play-button-overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 50px;
-  height: 50px;
+  bottom: 12px;
+  right: 12px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--accent);
   display: flex;
@@ -371,15 +373,18 @@ body{
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  transition: transform 0.2s ease, background 0.2s ease;
-  box-shadow: 0 8px 24px rgba(255, 42, 95, 0.5);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 16px rgba(255, 42, 95, 0.4);
+  transform: translateY(60px);
+  opacity: 0;
 }
 .card-img-wrapper:hover .play-button-overlay {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translateY(0);
+  opacity: 1;
 }
 .play-button-overlay:hover {
   background: var(--accent-hover);
-  box-shadow: 0 12px 32px rgba(255, 42, 95, 0.6);
+  transform: scale(1.1);
 }
 .play-button-overlay svg {
   width: 24px;
@@ -387,33 +392,59 @@ body{
   fill: white;
   margin-left: 2px;
 }
-.card-title{ font-size:15px; font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.card-subtitle{ font-size:13px; color:var(--text-dim); }
+.card-title{ font-size:14px; font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color: var(--text-main); }
+.card-subtitle{ font-size:12px; color:var(--text-dim); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* Top 2-Column Grid */
 .top-mixes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
   margin-bottom: 25px;
 }
 
-.mix-card {
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: 0.3s;
+.top-mixes-grid .card {
+  padding: 12px;
 }
 
-.mix-card:hover { background: rgba(255,255,255,0.2); }
+.top-mixes-grid .card-img-wrapper {
+  margin-bottom: 8px;
+}
 
-.mix-card img { width: 64px; height: 64px; object-fit: cover; }
+.mix-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
 
-.mix-card span { font-weight: 600; font-size: 14px; }
+.mix-card:hover { 
+  background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.2);
+  box-shadow: 0 8px 20px rgba(255, 42, 95, 0.15);
+}
+
+.mix-card img { 
+  width: 80px; 
+  height: 80px; 
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.mix-card span { 
+  font-weight: 600; 
+  font-size: 16px;
+  flex-grow: 1;
+}
 
 /* Filter Chips */
 .category-filters {
@@ -792,18 +823,14 @@ body{
   <div id="youtube-player" style="display: none;"></div>
 
   <div class="top-mixes-grid">
-    <div class="mix-card" onclick="playSong('dQw4w9WgXcQ', 'Top Gaming Tracks', 'Various Artists', 'https://picsum.photos/seed/mix1/80')">
-        <img src="https://picsum.photos/seed/mix1/80"><span>Top Gaming Tracks</span>
+    <div class="mix-card" onclick="playGenreAutomix('amapiano', 'https://picsum.photos/seed/amapiano/80')">
+        <img src="https://picsum.photos/seed/amapiano/80"><span>Amapiano</span>
     </div>
-    <div class="card" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
-        <div class="card-img-wrapper">
-            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
-            <div class="play-button-overlay" onclick="event.stopPropagation(); playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
-                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-            </div>
-        </div>
-        <div class="card-title">Isaka II (6am) [With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats] (feat. Thukuthela, Jazzworx & Lekaa Beats)</div>
-        <div class="card-subtitle">Ciza, Tems & Omah Lay</div>
+    <div class="mix-card" onclick="playGenreAutomix('afrobeats', 'https://picsum.photos/seed/afrobeats/80')">
+        <img src="https://picsum.photos/seed/afrobeats/80"><span>Afrobeats</span>
+    </div>
+    <div class="mix-card" onclick="playGenreAutomix('dancehall', 'https://picsum.photos/seed/dancehall/80')">
+        <img src="https://picsum.photos/seed/dancehall/80"><span>Dancehall</span>
     </div>
   </div>
 
@@ -814,6 +841,16 @@ body{
 </div>
     <div class="section-title">Made For You</div>
     <div class="cards-grid">
+      <div class="card" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
+        <div class="card-img-wrapper">
+            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+            <div class="play-button-overlay" onclick="event.stopPropagation(); playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
+                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+        </div>
+        <div class="card-title">Isaka II (6am)</div>
+        <div class="card-subtitle">Ciza, Tems & Omah Lay</div>
+      </div>
       <div class="card" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
         <div class="card-img-wrapper">
           <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
@@ -833,6 +870,228 @@ body{
         </div>
         <div class="card-title">Daily Mix 2</div>
         <div class="card-subtitle">Lojay, Melvitto...</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('afrobeats', 'https://picsum.photos/seed/afrobeats/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/afrobeats/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('afrobeats', 'https://picsum.photos/seed/afrobeats/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Afrobeats Vibes</div>
+        <div class="card-subtitle">Top trending tracks</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('amapiano', 'https://picsum.photos/seed/amapiano/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/amapiano/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('amapiano', 'https://picsum.photos/seed/amapiano/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Amapiano Mix</div>
+        <div class="card-subtitle">South African beats</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('dancehall', 'https://picsum.photos/seed/dancehall/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/dancehall/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('dancehall', 'https://picsum.photos/seed/dancehall/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Dancehall Hits</div>
+        <div class="card-subtitle">Fresh releases</div>
+      </div>
+    </div>
+
+    <div class="section-title">Popular Now</div>
+    <div class="cards-grid">
+      <div class="card" onclick="playGenreAutomix('hip hop', 'https://picsum.photos/seed/hiphop/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/hiphop/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('hip hop', 'https://picsum.photos/seed/hiphop/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Hip Hop Rising</div>
+        <div class="card-subtitle">Latest releases</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('reggae', 'https://picsum.photos/seed/reggae/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/reggae/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('reggae', 'https://picsum.photos/seed/reggae/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Reggae Classics</div>
+        <div class="card-subtitle">Smooth vibes</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('rnb', 'https://picsum.photos/seed/rnb/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/rnb/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('rnb', 'https://picsum.photos/seed/rnb/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">R&B Essentials</div>
+        <div class="card-subtitle">Soul & Groove</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('electronic', 'https://picsum.photos/seed/electronic/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/electronic/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('electronic', 'https://picsum.photos/seed/electronic/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Electronic Beats</div>
+        <div class="card-subtitle">Dance & EDM</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('pop', 'https://picsum.photos/seed/pop/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/pop/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('pop', 'https://picsum.photos/seed/pop/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Pop Hits</div>
+        <div class="card-subtitle">Global favorites</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('jazz', 'https://picsum.photos/seed/jazz/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/jazz/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('jazz', 'https://picsum.photos/seed/jazz/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Jazz Moods</div>
+        <div class="card-subtitle">Relax & unwind</div>
+      </div>
+    </div>
+
+    <div class="section-title">New Releases</div>
+    <div class="cards-grid">
+      <div class="card" onclick="playGenreAutomix('trap', 'https://picsum.photos/seed/trap/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/trap/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('trap', 'https://picsum.photos/seed/trap/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Trap Nation</div>
+        <div class="card-subtitle">Hard hitting</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('indie', 'https://picsum.photos/seed/indie/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/indie/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('indie', 'https://picsum.photos/seed/indie/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Indie Gems</div>
+        <div class="card-subtitle">Alternative sounds</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('house', 'https://picsum.photos/seed/house/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/house/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('house', 'https://picsum.photos/seed/house/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">House Music</div>
+        <div class="card-subtitle">Deep grooves</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('country', 'https://picsum.photos/seed/country/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/country/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('country', 'https://picsum.photos/seed/country/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Country Classics</div>
+        <div class="card-subtitle">Stories & emotions</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('rock', 'https://picsum.photos/seed/rock/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/rock/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('rock', 'https://picsum.photos/seed/rock/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Rock Legends</div>
+        <div class="card-subtitle">Classic anthems</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('soul', 'https://picsum.photos/seed/soul/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/soul/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('soul', 'https://picsum.photos/seed/soul/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Soul Sessions</div>
+        <div class="card-subtitle">Deep feelings</div>
+      </div>
+    </div>
+
+    <div class="section-title">Trending Worldwide</div>
+    <div class="cards-grid">
+      <div class="card" onclick="playGenreAutomix('latin', 'https://picsum.photos/seed/latin/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/latin/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('latin', 'https://picsum.photos/seed/latin/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Latin Vibes</div>
+        <div class="card-subtitle">Global hits</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('kpop', 'https://picsum.photos/seed/kpop/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/kpop/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('kpop', 'https://picsum.photos/seed/kpop/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">K-Pop Chart</div>
+        <div class="card-subtitle">Top artists</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('bollywood', 'https://picsum.photos/seed/bollywood/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/bollywood/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('bollywood', 'https://picsum.photos/seed/bollywood/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Bollywood Beats</div>
+        <div class="card-subtitle">Movie hits</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('gospel', 'https://picsum.photos/seed/gospel/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/gospel/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('gospel', 'https://picsum.photos/seed/gospel/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Gospel Hymns</div>
+        <div class="card-subtitle">Inspirational</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('classical', 'https://picsum.photos/seed/classical/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/classical/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('classical', 'https://picsum.photos/seed/classical/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Classical Music</div>
+        <div class="card-subtitle">Timeless pieces</div>
+      </div>
+      <div class="card" onclick="playGenreAutomix('lofi', 'https://picsum.photos/seed/lofi/200')">
+        <div class="card-img-wrapper">
+          <img src="https://picsum.photos/seed/lofi/200">
+          <div class="play-button-overlay" onclick="event.stopPropagation(); playGenreAutomix('lofi', 'https://picsum.photos/seed/lofi/200')">
+              <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="card-title">Lo-Fi Beats</div>
+        <div class="card-subtitle">Chill & study</div>
       </div>
     </div>
   </div>
@@ -874,6 +1133,7 @@ body{
 var player;
 let isVideoPlaying = false;
 const API_KEY = 'AIzaSyDY_LSxTxIwsOW1m72OVfGQLycubRUEwIw'; // Your YouTube API Key
+let searchDebounceTimer; // Debounce timer for real-time search
 
 // Playlist management
 let playlist = [
@@ -987,9 +1247,27 @@ function resetSearch() {
 }
 
 function handleSearchKeyPress(event) {
+    const query = document.getElementById('searchInput').value.trim();
+    
+    // Clear previous debounce timer
+    clearTimeout(searchDebounceTimer);
+    
+    // Handle Enter key - search immediately
     if (event.key === 'Enter') {
-        const query = document.getElementById('searchInput').value;
         if (query) searchYouTube(query);
+        return;
+    }
+    
+    // Real-time search as user types
+    if (query.length >= 2) {
+        // Debounce: wait 300ms after user stops typing before searching
+        searchDebounceTimer = setTimeout(() => {
+            searchYouTube(query);
+        }, 300);
+    } else if (query.length === 0) {
+        // Clear results if search box is empty
+        document.getElementById('searchResultsDropdown').classList.remove('show');
+        document.getElementById('searchResultsDropdown').innerHTML = '';
     }
 }
 
@@ -1035,6 +1313,53 @@ function playSearchedSong(id, title, artist, img, query = '') {
     
     // Pre-fetch related songs for autoplay
     fetchRelatedSongs(query || title);
+}
+
+// 4a.1 PLAY GENRE AUTOMIX
+async function playGenreAutomix(genre, genreImg) {
+    if (!player || !player.loadVideoById) return;
+
+    // Enable autoplay mode for genre
+    isAutoplayMode = true;
+    currentSearchQuery = genre; // Store genre for finding related songs
+    autoplayQueue = []; // Clear previous queue
+    currentSongIndex = -1; // Not in predefined playlist
+
+    // Fetch songs from the selected genre
+    try {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&q=${encodeURIComponent(genre)}&type=video&key=${API_KEY}`);
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            // Get first song and play it
+            const firstSong = data.items[0];
+            const title = firstSong.snippet.title;
+            const artist = firstSong.snippet.channelTitle;
+            const img = firstSong.snippet.thumbnails.medium.url;
+
+            player.loadVideoById(firstSong.id.videoId);
+            player.playVideo();
+            
+            // Update music bar
+            document.querySelector('.song-name').textContent = title;
+            document.querySelector('.song-artist').textContent = artist;
+            document.querySelector('.music-info img').src = img;
+            
+            showToast('Automix: ' + genre.charAt(0).toUpperCase() + genre.slice(1));
+
+            // Populate queue with remaining songs
+            autoplayQueue = data.items.slice(1).map(item => ({
+                id: item.id.videoId,
+                title: item.snippet.title,
+                artist: item.snippet.channelTitle,
+                img: item.snippet.thumbnails.medium.url
+            }));
+            console.log('Loaded ' + autoplayQueue.length + ' ' + genre + ' songs');
+        }
+    } catch (error) {
+        console.error("Error fetching genre songs:", error);
+        showToast('Error loading ' + genre + ' songs');
+    }
 }
 
 // 4b. FETCH RELATED SONGS FROM YOUTUBE
