@@ -883,6 +883,9 @@ let playlist = [
     { id: 'JGwWNGJdvx8', title: 'Daily Mix 2', artist: 'Ed Sheeran', img: 'https://picsum.photos/seed/m2/200' }
 ];
 let currentSongIndex = -1;
+let autoplayQueue = []; // Queue for songs from search results
+let isAutoplayMode = false; // Tracks if we're in autoplay mode (search-based)
+let currentSearchQuery = ''; // Store the search query for finding related songs
 
 // 2. YOUTUBE API INITIALIZATION
 function onYouTubeIframeAPIReady() {
@@ -955,7 +958,8 @@ async function searchYouTube(query) {
             const resultItem = document.createElement('div');
             resultItem.className = 'search-result-item';
             resultItem.onclick = () => {
-                playSong(videoId, title, artist, thumb);
+                // Use playSearchedSong to enable automix mode
+                playSearchedSong(videoId, title, artist, thumb, query);
                 resetSearch();
             };
             
@@ -997,6 +1001,7 @@ function playSong(id, title, artist, img) {
     const songIndex = playlist.findIndex(song => song.id === id);
     if (songIndex !== -1) {
         currentSongIndex = songIndex;
+        isAutoplayMode = false;
     }
 
     player.loadVideoById(id);
@@ -1008,21 +1013,79 @@ function playSong(id, title, artist, img) {
     document.querySelector('.music-info img').src = img;
 }
 
-// 4b. AUTOPLAY NEXT SONG
+// 4a. PLAY SONG FROM SEARCH RESULTS (enables automix mode)
+function playSearchedSong(id, title, artist, img, query = '') {
+    if (!player || !player.loadVideoById) return;
+
+    // Enable autoplay mode for search results
+    isAutoplayMode = true;
+    currentSearchQuery = query || title; // Store query for finding related songs
+    autoplayQueue = []; // Clear previous queue
+    currentSongIndex = -1; // Not in predefined playlist
+
+    player.loadVideoById(id);
+    player.playVideo();
+    
+    // Update music bar with song info
+    document.querySelector('.song-name').textContent = title;
+    document.querySelector('.song-artist').textContent = artist;
+    document.querySelector('.music-info img').src = img;
+    
+    showToast('Automix: Playing ' + title);
+    
+    // Pre-fetch related songs for autoplay
+    fetchRelatedSongs(query || title);
+}
+
+// 4b. FETCH RELATED SONGS FROM YOUTUBE
+async function fetchRelatedSongs(query) {
+    try {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`);
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            autoplayQueue = data.items.map(item => ({
+                id: item.id.videoId,
+                title: item.snippet.title,
+                artist: item.snippet.channelTitle,
+                img: item.snippet.thumbnails.medium.url
+            }));
+            console.log('Fetched ' + autoplayQueue.length + ' related songs for autoplay');
+        }
+    } catch (error) {
+        console.error("Error fetching related songs:", error);
+    }
+}
+
+// 4c. AUTOPLAY NEXT SONG (handles both playlist and search-based autoplay)
 function playNextSongAutomatic() {
-    // Check if there's a next song in the playlist
-    if (currentSongIndex < playlist.length - 1) {
-        currentSongIndex++;
-        const nextSong = playlist[currentSongIndex];
-        playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
-        showToast('Playing: ' + nextSong.title);
+    if (isAutoplayMode) {
+        // Autoplay mode for search results - play from autoplay queue
+        if (autoplayQueue.length > 0) {
+            const nextSong = autoplayQueue.shift(); // Get and remove first song from queue
+            playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
+            showToast('Automix: ' + nextSong.title);
+            
+            // Fetch more related songs if queue is running low
+            if (autoplayQueue.length < 5 && currentSearchQuery) {
+                fetchRelatedSongs(currentSearchQuery);
+            }
+        } else {
+            // Queue is empty, fetch more songs
+            if (currentSearchQuery) {
+                fetchRelatedSongs(currentSearchQuery);
+            }
+        }
     } else {
-        // Playlist finished - you can add loop functionality here if desired
-        console.log('Playlist finished. All songs have been played.');
-        // Optionally, loop back to the first song:
-        // currentSongIndex = 0;
-        // const firstSong = playlist[0];
-        // playSong(firstSong.id, firstSong.title, firstSong.artist, firstSong.img);
+        // Regular playlist autoplay
+        if (currentSongIndex < playlist.length - 1) {
+            currentSongIndex++;
+            const nextSong = playlist[currentSongIndex];
+            playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
+            showToast('Playing: ' + nextSong.title);
+        } else {
+            console.log('Playlist finished. All songs have been played.');
+        }
     }
 }
 
