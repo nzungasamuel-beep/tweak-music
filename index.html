@@ -912,6 +912,9 @@ function onPlayerStateChange(event) {
     const playBtn = document.getElementById('masterPlay');
     if (event.data === YT.PlayerState.PLAYING) {
         playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+    } else if (event.data === YT.PlayerState.ENDED) {
+        // Autoplay: Play next song when current song ends
+        playNextSongAutomatic();
     } else {
         playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
     }
@@ -1005,7 +1008,36 @@ function playSong(id, title, artist, img) {
     document.querySelector('.music-info img').src = img;
 }
 
+// 4b. AUTOPLAY NEXT SONG
+function playNextSongAutomatic() {
+    // Check if there's a next song in the playlist
+    if (currentSongIndex < playlist.length - 1) {
+        currentSongIndex++;
+        const nextSong = playlist[currentSongIndex];
+        playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
+        showToast('Playing: ' + nextSong.title);
+    } else {
+        // Playlist finished - you can add loop functionality here if desired
+        console.log('Playlist finished. All songs have been played.');
+        // Optionally, loop back to the first song:
+        // currentSongIndex = 0;
+        // const firstSong = playlist[0];
+        // playSong(firstSong.id, firstSong.title, firstSong.artist, firstSong.img);
+    }
+}
+
 // 5. INITIALIZATION & EVENT LISTENERS
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // Master Play/Pause Toggle
