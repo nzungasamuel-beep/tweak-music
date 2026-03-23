@@ -5,11 +5,13 @@
 <meta charset="UTF-8">
 <title>Tweak Music Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/player.css">
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/mobile.css">
 <style>
 :root {
   --bg-main:#121212;
@@ -1499,10 +1501,19 @@ body{
     </div>
 
     <div class="mobile-nav">
-    <div class="nav-item" onclick="showSection('home')"><i class="fa-solid fa-house"></i></div>
-    <div class="nav-item" onclick="showSection('search')"><i class="fa-solid fa-magnifying-glass"></i></div>
-    <div class="nav-item" onclick="showSection('library')"><i class="fa-solid fa-book"></i></div>
-</div>
+        <div class="nav-item active" onclick="showSection('home')" data-section="home">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="activateSearch()" data-section="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Search</span>
+        </div>
+        <div class="nav-item" onclick="toggleMenu('libraryMenu', event)" data-section="library">
+            <i class="fa-solid fa-music"></i>
+            <span>Library</span>
+        </div>
+    </div>
 
     <div class="queue-container" id="queueContainer">
     <div class="queue-header">
@@ -1589,6 +1600,14 @@ function activateSearch() {
     const wrapper = document.getElementById('searchWrapper');
     wrapper.style.display = 'flex';
     document.getElementById('searchInput').focus();
+
+    // Update mobile navigation active state
+    document.querySelectorAll('.mobile-nav .nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === 'search') {
+            item.classList.add('active');
+        }
+    });
 }
 
 async function searchYouTube(query) {
@@ -1644,6 +1663,14 @@ function resetSearch() {
     document.getElementById('searchInput').value = '';
     document.getElementById('searchResultsDropdown').classList.remove('show');
     document.getElementById('searchResultsDropdown').innerHTML = '';
+
+    // Reset mobile navigation to home
+    document.querySelectorAll('.mobile-nav .nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === 'home') {
+            item.classList.add('active');
+        }
+    });
 }
 
 function handleSearchKeyPress(event) {
@@ -2048,6 +2075,14 @@ function showSection(id) {
     if (queue) {
         queue.classList.remove('active');
     }
+
+    // Update mobile navigation active state
+    document.querySelectorAll('.mobile-nav .nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === id) {
+            item.classList.add('active');
+        }
+    });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
