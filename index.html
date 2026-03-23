@@ -1412,7 +1412,9 @@ function showSection(section) {
     }
 }
 let isVideoPlaying = false;
-const API_KEY = 'AIzaSyDY_LSxTxIwsOW1m72OVfGQLycubRUEwIw'; // Your YouTube API Key
+// IMPORTANT: Replace this with your own YouTube Data API v3 key
+// Get your free API key from: https://console.cloud.google.com/apis/credentials
+const API_KEY = 'AIzaSyBDSDLq4u3LOf9KLgCAvttTGsv63U9Ln0U'; 
 let searchDebounceTimer; // Debounce timer for real-time search
 
 // DYNAMIC SONG FETCHING FOR SECTIONS
@@ -1420,11 +1422,17 @@ async function fetchAndDisplaySongs(sectionQuery, containerId, maxResults = 6) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    console.log(`Fetching songs for: ${sectionQuery}`);
+    console.log(`Container ID: ${containerId}`);
+
     try {
         const response = await fetch(
             `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${maxResults}&q=${encodeURIComponent(sectionQuery)}&type=video&key=${API_KEY}`
         );
         const data = await response.json();
+
+        console.log('API Response:', data);
+        console.log('Items found:', data.items ? data.items.length : 0);
 
         if (!data.items || data.items.length === 0) {
             container.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 20px;">No songs found</p>';
@@ -1441,7 +1449,9 @@ async function fetchAndDisplaySongs(sectionQuery, containerId, maxResults = 6) {
 
             const card = document.createElement('div');
             card.className = 'card';
-            card.onclick = () => playSong(videoId, title, artist, thumbnail);
+            card.onclick = function() {
+                playSong(videoId, title, artist, thumbnail);
+            };
 
             card.innerHTML = `
                 <div class="card-img-wrapper">
@@ -1458,12 +1468,24 @@ async function fetchAndDisplaySongs(sectionQuery, containerId, maxResults = 6) {
         });
     } catch (error) {
         console.error(`Error fetching ${sectionQuery} songs:`, error);
-        container.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 20px;">Error loading songs</p>';
+        console.error('Error details:', error.message);
+
+        // Check if API key is invalid
+        if (error.message && error.message.includes('API key')) {
+            container.innerHTML = '<p style="color: #ff6b6b; text-align: center; padding: 20px;">Invalid API Key. Please check your YouTube Data API key.</p>';
+        } else if (error.message && error.message.includes('quota')) {
+            container.innerHTML = '<p style="color: #ff6b6b; text-align: center; padding: 20px;">API quota exceeded. Try again later.</p>';
+        } else {
+            container.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 20px;">Error loading songs: ' + error.message + '</p>';
+        }
     }
 }
 
 // INITIALIZE HOME PAGE WITH DYNAMIC CONTENT
 async function initializeHomePage() {
+    console.log('Initializing home page...');
+    console.log('API Key:', API_KEY ? 'Set' : 'Not set');
+
     // Made For You section - personalized recommendations
     await fetchAndDisplaySongs('music playlist 2024', 'madeForYouGrid', 6);
 
@@ -1475,6 +1497,8 @@ async function initializeHomePage() {
 
     // Trending Worldwide - viral hits
     await fetchAndDisplaySongs('trending music worldwide', 'trendingWorldwideGrid', 6);
+
+    console.log('Home page initialization complete');
 }
 
 // Playlist management
@@ -1552,9 +1576,12 @@ async function searchYouTube(query) {
             return;
         }
 
+        console.log('API Response:', data);
+        console.log('Number of items:', data.items ? data.items.length : 0);
+
         searchResultsDropdown.innerHTML = ''; 
 
-        data.items.forEach((item) => {
+        data.items.forEach(function(item) {
             const videoId = item.id.videoId;
             const title = item.snippet.title;
             const artist = item.snippet.channelTitle;
@@ -1562,7 +1589,7 @@ async function searchYouTube(query) {
 
             const resultItem = document.createElement('div');
             resultItem.className = 'search-result-item';
-            resultItem.onclick = () => {
+            resultItem.onclick = function() {
                 // Use playSearchedSong to enable automix mode
                 playSearchedSong(videoId, title, artist, thumb, query);
                 resetSearch();
@@ -1580,6 +1607,12 @@ async function searchYouTube(query) {
 
     } catch (error) {
         console.error("Search Error:", error);
+        console.error("Error details:", error.message);
+
+        // Check if API key is invalid
+        if (error.message && error.message.includes('API key')) {
+            searchResultsDropdown.innerHTML = '<p style="padding: 12px; text-align: center; color: #ff6b6b;">Invalid API Key. Please check your YouTube Data API key.</p>';
+        }
     }
 }
 
@@ -1693,12 +1726,14 @@ async function playGenreAutomix(genre, genreImg) {
             showToast('Automix: ' + genre.charAt(0).toUpperCase() + genre.slice(1));
 
             // Populate queue with remaining songs
-            autoplayQueue = data.items.slice(1).map(item => ({
-                id: item.id.videoId,
-                title: item.snippet.title,
-                artist: item.snippet.channelTitle,
-                img: item.snippet.thumbnails.medium.url
-            }));
+            autoplayQueue = data.items.slice(1).map(function(item) {
+                return {
+                    id: item.id.videoId,
+                    title: item.snippet.title,
+                    artist: item.snippet.channelTitle,
+                    img: item.snippet.thumbnails.medium.url
+                };
+            });
             console.log('Loaded ' + autoplayQueue.length + ' ' + genre + ' songs');
         }
     } catch (error) {
@@ -1718,12 +1753,14 @@ async function fetchRelatedSongs(query) {
         const data = await response.json();
 
         if (data.items && data.items.length > 0) {
-            autoplayQueue = data.items.map(item => ({
-                id: item.id.videoId,
-                title: item.snippet.title,
-                artist: item.snippet.channelTitle,
-                img: item.snippet.thumbnails.medium.url
-            }));
+            autoplayQueue = data.items.map(function(item) {
+                return {
+                    id: item.id.videoId,
+                    title: item.snippet.title,
+                    artist: item.snippet.channelTitle,
+                    img: item.snippet.thumbnails.medium.url
+                };
+            });
             console.log('Fetched ' + autoplayQueue.length + ' related songs for autoplay');
         }
     } catch (error) {
@@ -1897,10 +1934,10 @@ function updateQueueUI() {
         return;
     }
 
-    nextSongs.forEach((song, index) => {
+    nextSongs.forEach(function(song, index) {
         const item = document.createElement('div');
         item.className = 'queue-item';
-        item.onclick = () => {
+        item.onclick = function() {
             currentSongIndex = playlist.indexOf(song);
             playSong(song.id, song.title, song.artist, song.img);
             updateQueueUI(); // Refresh UI
@@ -2032,5 +2069,8 @@ document.addEventListener('DOMContentLoaded', () => {
     showSection('home');
 });
 </script>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
