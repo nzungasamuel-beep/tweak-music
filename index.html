@@ -4,6 +4,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Tweak Music Dashboard</title>
+<script>
+// Automatic Device Detection - Show appropriate layout
+function detectDevice() {
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        // Show mobile layout
+        document.body.classList.add('mobile-view');
+        document.body.classList.remove('desktop-view');
+    } else {
+        // Show desktop layout
+        document.body.classList.add('desktop-view');
+        document.body.classList.remove('mobile-view');
+    }
+}
+
+// Run detection on load and resize
+window.addEventListener('load', detectDevice);
+window.addEventListener('resize', detectDevice);
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="css/global.css">
@@ -11,7 +31,7 @@
 <link rel="stylesheet" href="css/player.css">
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/responsive.css">
-<link rel="stylesheet" href="css/mobile.css">
+<link rel="stylesheet" href="css/mobile-clean.css">
 <style>
 :root {
   --bg-main:#121212;
@@ -77,6 +97,444 @@ body{
   min-height:100vh;
   caret-color: transparent;
   overflow: hidden; 
+}
+
+/* ========================================
+   DEVICE VIEW CLASSES
+   ======================================== */
+body.mobile-view {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 140px;
+}
+
+body.desktop-view {
+    overflow: hidden;
+}
+
+/* ========================================
+   MOBILE-SPECIFIC STYLES
+   ======================================== */
+body.mobile-view .header {
+    height: 56px;
+    padding: 0 16px;
+    flex-wrap: nowrap;
+}
+
+body.mobile-view .header-logo {
+    position: static !important;
+    transform: none !important;
+    font-size: 20px;
+}
+
+body.mobile-view .left-section {
+    display: none;
+}
+
+body.mobile-view .right-section {
+    display: none;
+}
+
+body.mobile-view .main-sections {
+    height: auto;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 200px;
+}
+
+body.mobile-view .music-bar {
+    display: none;
+}
+
+body.mobile-view .mobile-nav {
+    display: flex !important;
+}
+
+body.mobile-view .mobile-header {
+    display: flex !important;
+}
+
+body.mobile-view .mobile-content {
+    display: block !important;
+}
+
+body.mobile-view .mini-player {
+    display: flex !important;
+}
+
+body.mobile-view .bottom-nav {
+    display: flex !important;
+}
+
+/* ========================================
+   DESKTOP-SPECIFIC STYLES
+   ======================================== */
+body.desktop-view .mobile-header {
+    display: none;
+}
+
+body.desktop-view .mobile-menu {
+    display: none;
+}
+
+body.desktop-view .mobile-content {
+    display: none;
+}
+
+body.desktop-view .mini-player {
+    display: none;
+}
+
+body.desktop-view .bottom-nav {
+    display: none;
+}
+
+body.desktop-view .header {
+    display: flex !important;
+}
+
+body.desktop-view .main-sections {
+    display: flex !important;
+}
+
+body.desktop-view .music-bar {
+    display: flex !important;
+}
+
+body.desktop-view .left-section {
+    display: flex !important;
+}
+
+body.desktop-view .right-section {
+    display: flex !important;
+}
+
+/* ========================================
+   MOBILE COMPONENT STYLES
+   ======================================== */
+.mobile-header {
+    display: none;
+}
+
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-main);
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.menu-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.menu-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:active {
+    background: var(--bg-menu-hover);
+}
+
+.menu-item i {
+    width: 24px;
+    font-size: 18px;
+    color: var(--text-dim);
+}
+
+.mobile-content {
+    display: none;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-section);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-dim);
+}
+
+.search-icon {
+    color: var(--text-dim);
+    font-size: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.tab {
+    padding: 8px 20px;
+    background: var(--bg-card);
+    border: none;
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab.active {
+    background: var(--text-main);
+    color: var(--bg-main);
+}
+
+.tab:active {
+    transform: scale(0.98);
+}
+
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.genre-card {
+    aspect-ratio: 1/1;
+    background: var(--bg-card);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.genre-card:active {
+    transform: scale(0.98);
+}
+
+.genre-card img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+.genre-card span {
+    position: relative;
+    z-index: 1;
+    font-size: 18px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.song-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.song-item:active {
+    background: var(--bg-menu-hover);
+}
+
+.song-item img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.song-title {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.song-artist {
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.play-btn {
+    background: var(--accent);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.mini-player {
+    display: none;
+    position: fixed;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    background: var(--bg-section);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-player img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.mini-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.mini-title {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.mini-artist {
+    font-size: 12px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-controls {
+    display: flex;
+    gap: 16px;
+}
+
+.mini-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--bg-header);
+    border-top: 1px solid var(--border);
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    min-width: 64px;
+}
+
+.nav-item i {
+    font-size: 24px;
+}
+
+.nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: var(--accent);
 }
 
 /* HEADER */
@@ -1155,8 +1613,37 @@ body{
     <button class="header-btn outline" id="signInBtn" onclick="window.location.href='login.html'">Sign In</button>
 
     <div class="hamburger-menu" id="hamburgerMenu">
-      <button onclick="showToast('Profile Settings')">My Profile</button>
-      <button onclick="showToast('App Settings')">App Settings</button>
+        <div class="menu-section">
+            <div class="menu-section-title">Library</div>
+            <button onclick="showToast('Liked Songs')">
+                <i class="fa-solid fa-heart"></i>
+                Liked Songs
+            </button>
+            <button onclick="showToast('Your Playlists')">
+                <i class="fa-solid fa-list"></i>
+                Your Playlists
+            </button>
+            <button onclick="showToast('Recently Played')">
+                <i class="fa-solid fa-clock"></i>
+                Recently Played
+            </button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Settings</div>
+            <button onclick="showToast('Profile Settings')">
+                <i class="fa-solid fa-user"></i>
+                Profile Settings
+            </button>
+            <button onclick="showToast('App Settings')">
+                <i class="fa-solid fa-gear"></i>
+                App Settings
+            </button>
+            <button onclick="window.location.href='login.html'">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sign Out
+            </button>
+        </div>
     </div>
     <div class="library-menu" id="libraryMenu">
         <button onclick="showToast('Loading Liked Songs...')">Liked Songs</button>
@@ -1534,6 +2021,168 @@ body{
         <div id="toast" class="toast"></div>
     </div>
 </div>
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+    <button class="menu-btn" onclick="toggleMobileMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="logo">Tweak</div>
+    <button class="menu-btn" onclick="showMobileSearch()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="menu-section">
+        <div class="menu-title">Library</div>
+        <button class="menu-item" onclick="showSection('library')">
+            <i class="fa-solid fa-heart"></i>
+            Liked Songs
+        </button>
+        <button class="menu-item" onclick="showSection('playlists')">
+            <i class="fa-solid fa-list"></i>
+            Your Playlists
+        </button>
+        <button class="menu-item" onclick="showSection('recent')">
+            <i class="fa-solid fa-clock"></i>
+            Recently Played
+        </button>
+    </div>
+
+    <div class="menu-section">
+        <div class="menu-title">Settings</div>
+        <button class="menu-item" onclick="showToast('Profile Settings')">
+            <i class="fa-solid fa-user"></i>
+            Profile Settings
+        </button>
+        <button class="menu-item" onclick="showToast('App Settings')">
+            <i class="fa-solid fa-gear"></i>
+            App Settings
+        </button>
+    </div>
+</div>
+
+<!-- Mobile Content -->
+<main class="mobile-content">
+    <!-- Search Section -->
+    <div class="search-bar hidden" id="mobileSearchBar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" placeholder="Search for music..." id="mobileSearchInput">
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab(this, 'home')">Home</button>
+        <button class="tab" onclick="switchTab(this, 'browse')">Browse</button>
+        <button class="tab" onclick="switchTab(this, 'radio')">Radio</button>
+    </div>
+
+    <!-- Genre Grid -->
+    <div class="section-header">
+        <h2 class="section-title">Browse by Genre</h2>
+    </div>
+    <div class="genre-grid">
+        <div class="genre-card" onclick="playGenre('amapiano')">
+            <img src="https://picsum.photos/seed/amapiano/200">
+            <span>Amapiano</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('afrobeats')">
+            <img src="https://picsum.photos/seed/afrobeats/200">
+            <span>Afrobeats</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('dancehall')">
+            <img src="https://picsum.photos/seed/dancehall/200">
+            <span>Dancehall</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('hiphop')">
+            <img src="https://picsum.photos/seed/hiphop/200">
+            <span>Hip Hop</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('rnb')">
+            <img src="https://picsum.photos/seed/rnb/200">
+            <span>R&B</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('pop')">
+            <img src="https://picsum.photos/seed/pop/200">
+            <span>Pop</span>
+        </div>
+    </div>
+
+    <!-- Song List -->
+    <div class="section-header">
+        <h2 class="section-title">Trending Now</h2>
+    </div>
+    <div class="song-list">
+        <div class="song-item" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', 'Ciza, Tems & Omah Lay')">
+            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+            <div class="song-info">
+                <div class="song-title">Isaka II (6am)</div>
+                <div class="song-artist">Ciza, Tems & Omah Lay</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+        <div class="song-item" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!')">
+            <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
+            <div class="song-info">
+                <div class="song-title">BANANA!</div>
+                <div class="song-artist">JELEEL!</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+        <div class="song-item" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran')">
+            <img src="https://picsum.photos/seed/m2/200">
+            <div class="song-info">
+                <div class="song-title">Daily Mix 2</div>
+                <div class="song-artist">Ed Sheeran</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Mini Player -->
+<div class="mini-player" id="miniPlayer">
+    <img src="https://picsum.photos/seed/stunta/200">
+    <div class="mini-info">
+        <div class="mini-title">Select a Song</div>
+        <div class="mini-artist">Artist Name</div>
+    </div>
+    <div class="mini-controls">
+        <button class="mini-btn" onclick="prevSong()">
+            <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="mini-btn" onclick="togglePlay()">
+            <i class="fa-solid fa-play" id="playIcon"></i>
+        </button>
+        <button class="mini-btn" onclick="nextSong()">
+            <i class="fa-solid fa-forward-step"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchNav(this, 'home')">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </button>
+    <button class="nav-item" onclick="switchNav(this, 'search')">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Search</span>
+    </button>
+    <button class="nav-item" onclick="switchNav(this, 'library')">
+        <i class="fa-solid fa-music"></i>
+        <span>Library</span>
+    </button>
+</nav>
 
 
 <script>
@@ -2096,14 +2745,27 @@ function toggleMenu(menuId, event) {
     ['hamburgerMenu', 'libraryMenu', 'profileMenu'].forEach(id => {
         if (!id || id === menuId) return;
         const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
+        if (el) {
+            el.style.display = 'none';
+            el.classList.remove('active');
+        }
     });
 
     const target = document.getElementById(menuId);
     if (!target) return;
 
-    const isOpen = target.style.display === 'flex' || target.style.display === 'block';
-    target.style.display = isOpen ? 'none' : 'flex';
+    const isOpen = target.style.display === 'flex' || target.style.display === 'block' || target.classList.contains('active');
+
+    if (isOpen) {
+        target.style.display = 'none';
+        target.classList.remove('active');
+    } else {
+        target.style.display = 'flex';
+        target.classList.add('active');
+    }
+
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = isOpen ? 'auto' : 'hidden';
 }
 
 // Close header menus when clicking elsewhere
@@ -2118,6 +2780,65 @@ document.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     showSection('home');
 });
+
+// ========================================
+   MOBILE FUNCTIONS
+   ========================================
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('active');
+    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+}
+
+function showMobileSearch() {
+    const searchBar = document.getElementById('mobileSearchBar');
+    searchBar.classList.toggle('hidden');
+    if (!searchBar.classList.contains('hidden')) {
+        document.getElementById('mobileSearchInput').focus();
+    }
+}
+
+function switchTab(element, tabName) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    element.classList.add('active');
+    showToast(tabName + ' section');
+}
+
+function switchNav(element, navName) {
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+    if (navName === 'search') {
+        showMobileSearch();
+    }
+}
+
+function playGenre(genre) {
+    showToast('Playing ' + genre + ' mix');
+}
+
+function togglePlay() {
+    const icon = document.getElementById('playIcon');
+    if (icon.classList.contains('fa-play')) {
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');
+    } else {
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+    }
+}
+
+function prevSong() {
+    showToast('Previous song');
+}
+
+function nextSong() {
+    showToast('Next song');
+}
+
+function showSection(sectionName) {
+    toggleMobileMenu();
+    showToast('Opening ' + sectionName);
+}
 </script>
 </body>
 </html>
