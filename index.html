@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/responsive.css">
 <style>
-html {
+:root {
   --bg-main:#121212;
   --bg-header:#181818;
   --bg-section:#1f1f1f;
@@ -968,14 +968,17 @@ body{
     .main-sections {
         height: auto;
         overflow-y: auto;
-        padding: 16px;
+        padding: 12px;
         padding-bottom: 260px; /* Keep content above the fixed music bar + mobile nav */
         max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
     }
     .music-bar {
         height: 170px;
         max-height: 60vh;
         overflow-y: auto;
+        z-index: 1200;
         flex-direction: column;
         align-items: stretch;
         gap: 10px;
@@ -994,6 +997,17 @@ body{
         opacity: 1;
     }
 
+    /* Make header blocks feel like an app toolbar */
+    .header-logo {
+        width: 100%;
+        text-align: center;
+    }
+    .search-btn {
+        width: 100%;
+        justify-content: center;
+        min-width: 0;
+    }
+
     .sidebar {
         display: none !important; /* This hides the sidebar on phones */
     }
@@ -1004,7 +1018,7 @@ body{
     .mobile-nav {
         display: flex !important; /* This shows your Home/Search icons */
         position: fixed;
-        bottom: 170px;
+        bottom: 180px; /* Sit above the fixed music bar */
         left: 0;
         right: 0;
         height: 60px;
@@ -1012,7 +1026,7 @@ body{
         border-top: 1px solid #333;
         justify-content: space-around;
         align-items: center;
-        z-index: 1000;
+        z-index: 1300;
     }
     .player-bar {
         flex-direction: column; /* Stacks the player so it fits on a narrow screen */
@@ -1028,6 +1042,17 @@ body{
     .top-mixes-grid {
         grid-template-columns: 1fr;
         gap: 14px;
+    }
+    .mix-card {
+        padding: 12px;
+        gap: 12px;
+    }
+    .mix-card img {
+        width: 72px;
+        height: 72px;
+    }
+    .mix-card span {
+        font-size: 15px;
     }
     .section {
         padding: 14px;
@@ -1046,14 +1071,14 @@ body{
         width: 92vw;
         max-width: 360px;
         right: -92vw;
-        bottom: 170px;
+        bottom: 180px;
     }
     .queue-container.active {
         right: 0;
     }
 
     .custom-scrollbar-track {
-        bottom: 170px;
+        display: none; /* Avoid right-side overlay on mobile */
     }
 }
 
@@ -1076,7 +1101,7 @@ body{
     .mobile-nav {
         display: flex !important; /* This shows your 3 bottom icons */
         position: fixed;
-        bottom: 170px;
+        bottom: 180px;
         left: 0;
         right: 0;
         height: 60px;
@@ -1084,7 +1109,7 @@ body{
         border-top: 1px solid #333;
         justify-content: space-around;
         align-items: center;
-        z-index: 1000;
+        z-index: 1300;
     }
 }
 
