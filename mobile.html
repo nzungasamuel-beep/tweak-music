@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<title>Tweak Music - Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg-main:#121212;
+  --bg-header:#181818;
+  --bg-section:#1f1f1f;
+  --bg-card:#2a2a2a;
+  --bg-menu:#282828;
+  --bg-menu-hover:#3e3e3e;
+  --text-main:#fff;
+  --text-dim:#b3b3b3;
+  --accent:#ff2a5f;
+  --accent-hover:#ff5c86;
+  --border:#333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    padding-bottom: 140px;
+}
+
+/* ========================================
+   MOBILE HEADER
+   ======================================== */
+.mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 24px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* ========================================
+   MOBILE MENU
+   ======================================== */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-main);
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.menu-section {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.menu-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.menu-item:active {
+    background: var(--bg-menu-hover);
+}
+
+.menu-item i {
+    width: 24px;
+    font-size: 18px;
+    color: var(--text-dim);
+}
+
+/* ========================================
+   MOBILE CONTENT
+   ======================================== */
+.mobile-content {
+    padding: 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* ========================================
+   GENRE CARDS
+   ======================================== */
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.genre-card {
+    aspect-ratio: 1/1;
+    background: var(--bg-card);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.genre-card:active {
+    transform: scale(0.98);
+}
+
+.genre-card img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+.genre-card span {
+    position: relative;
+    z-index: 1;
+    font-size: 18px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* ========================================
+   SONG LIST
+   ======================================== */
+.song-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.song-item:active {
+    background: var(--bg-menu-hover);
+}
+
+.song-item img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.song-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.song-title {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.song-artist {
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.play-btn {
+    background: var(--accent);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+/* ========================================
+   BOTTOM NAVIGATION
+   ======================================== */
+.bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: var(--bg-header);
+    border-top: 1px solid var(--border);
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    min-width: 64px;
+}
+
+.nav-item i {
+    font-size: 24px;
+}
+
+.nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: var(--accent);
+}
+
+/* ========================================
+   MINI PLAYER
+   ======================================== */
+.mini-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-section);
+    border-top: 1px solid var(--border);
+    position: fixed;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+.mini-player img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.mini-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.mini-title {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.mini-artist {
+    font-size: 12px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-controls {
+    display: flex;
+    gap: 16px;
+}
+
+.mini-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+/* ========================================
+   SEARCH
+   ======================================== */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-section);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: var(--text-dim);
+}
+
+.search-icon {
+    color: var(--text-dim);
+    font-size: 20px;
+}
+
+/* ========================================
+   TABS
+   ======================================== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.tab {
+    padding: 8px 20px;
+    background: var(--bg-card);
+    border: none;
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab.active {
+    background: var(--text-main);
+    color: var(--bg-main);
+}
+
+.tab:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   TOAST
+   ======================================== */
+.toast {
+    position: fixed;
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    z-index: 9999;
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* ========================================
+   HIDDEN ELEMENTS
+   ======================================== */
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+    <button class="menu-btn" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="logo">Tweak</div>
+    <button class="menu-btn" onclick="showSearch()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="menu-section">
+        <div class="menu-title">Library</div>
+        <button class="menu-item" onclick="showSection('library')">
+            <i class="fa-solid fa-heart"></i>
+            Liked Songs
+        </button>
+        <button class="menu-item" onclick="showSection('playlists')">
+            <i class="fa-solid fa-list"></i>
+            Your Playlists
+        </button>
+        <button class="menu-item" onclick="showSection('recent')">
+            <i class="fa-solid fa-clock"></i>
+            Recently Played
+        </button>
+    </div>
+
+    <div class="menu-section">
+        <div class="menu-title">Settings</div>
+        <button class="menu-item" onclick="showToast('Profile Settings')">
+            <i class="fa-solid fa-user"></i>
+            Profile Settings
+        </button>
+        <button class="menu-item" onclick="showToast('App Settings')">
+            <i class="fa-solid fa-gear"></i>
+            App Settings
+        </button>
+        <button class="menu-item" onclick="window.location.href='index.html'">
+            <i class="fa-solid fa-desktop"></i>
+            Desktop Version
+        </button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="mobile-content">
+    <!-- Search Section -->
+    <div class="search-bar hidden" id="searchBar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" placeholder="Search for music..." id="searchInput">
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab(this, 'home')">Home</button>
+        <button class="tab" onclick="switchTab(this, 'browse')">Browse</button>
+        <button class="tab" onclick="switchTab(this, 'radio')">Radio</button>
+    </div>
+
+    <!-- Genre Grid -->
+    <div class="section-header">
+        <h2 class="section-title">Browse by Genre</h2>
+    </div>
+    <div class="genre-grid">
+        <div class="genre-card" onclick="playGenre('amapiano')">
+            <img src="https://picsum.photos/seed/amapiano/200">
+            <span>Amapiano</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('afrobeats')">
+            <img src="https://picsum.photos/seed/afrobeats/200">
+            <span>Afrobeats</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('dancehall')">
+            <img src="https://picsum.photos/seed/dancehall/200">
+            <span>Dancehall</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('hiphop')">
+            <img src="https://picsum.photos/seed/hiphop/200">
+            <span>Hip Hop</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('rnb')">
+            <img src="https://picsum.photos/seed/rnb/200">
+            <span>R&B</span>
+        </div>
+        <div class="genre-card" onclick="playGenre('pop')">
+            <img src="https://picsum.photos/seed/pop/200">
+            <span>Pop</span>
+        </div>
+    </div>
+
+    <!-- Song List -->
+    <div class="section-header">
+        <h2 class="section-title">Trending Now</h2>
+    </div>
+    <div class="song-list">
+        <div class="song-item" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', 'Ciza, Tems & Omah Lay')">
+            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+            <div class="song-info">
+                <div class="song-title">Isaka II (6am)</div>
+                <div class="song-artist">Ciza, Tems & Omah Lay</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+        <div class="song-item" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!')">
+            <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
+            <div class="song-info">
+                <div class="song-title">BANANA!</div>
+                <div class="song-artist">JELEEL!</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+        <div class="song-item" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran')">
+            <img src="https://picsum.photos/seed/m2/200">
+            <div class="song-info">
+                <div class="song-title">Daily Mix 2</div>
+                <div class="song-artist">Ed Sheeran</div>
+            </div>
+            <button class="play-btn">
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Mini Player -->
+<div class="mini-player" id="miniPlayer">
+    <img src="https://picsum.photos/seed/stunta/200">
+    <div class="mini-info">
+        <div class="mini-title">Select a Song</div>
+        <div class="mini-artist">Artist Name</div>
+    </div>
+    <div class="mini-controls">
+        <button class="mini-btn" onclick="prevSong()">
+            <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="mini-btn" onclick="togglePlay()">
+            <i class="fa-solid fa-play" id="playIcon"></i>
+        </button>
+        <button class="mini-btn" onclick="nextSong()">
+            <i class="fa-solid fa-forward-step"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchNav(this, 'home')">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </button>
+    <button class="nav-item" onclick="switchNav(this, 'search')">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Search</span>
+    </button>
+    <button class="nav-item" onclick="switchNav(this, 'library')">
+        <i class="fa-solid fa-music"></i>
+        <span>Library</span>
+    </button>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Menu Toggle
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('active');
+    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+}
+
+// Search Toggle
+function showSearch() {
+    const searchBar = document.getElementById('searchBar');
+    searchBar.classList.toggle('hidden');
+    if (!searchBar.classList.contains('hidden')) {
+        document.getElementById('searchInput').focus();
+    }
+}
+
+// Tab Switching
+function switchTab(element, tabName) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    element.classList.add('active');
+    showToast(tabName + ' section');
+}
+
+// Navigation Switching
+function switchNav(element, navName) {
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+    if (navName === 'search') {
+        showSearch();
+    }
+}
+
+// Play Functions
+function playSong(id, title, artist) {
+    const miniPlayer = document.getElementById('miniPlayer');
+    miniPlayer.querySelector('.mini-title').textContent = title;
+    miniPlayer.querySelector('.mini-artist').textContent = artist;
+    showToast('Playing: ' + title);
+}
+
+function playGenre(genre) {
+    showToast('Playing ' + genre + ' mix');
+}
+
+function togglePlay() {
+    const icon = document.getElementById('playIcon');
+    if (icon.classList.contains('fa-play')) {
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');
+    } else {
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+    }
+}
+
+function prevSong() {
+    showToast('Previous song');
+}
+
+function nextSong() {
+    showToast('Next song');
+}
+
+// Toast Notification
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
+}
+
+// Section Navigation
+function showSection(sectionName) {
+    toggleMenu();
+    showToast('Opening ' + sectionName);
+}
+</script>
+</body>
+</html>
