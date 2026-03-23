@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 <title>Tweak Music Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/global.css">
@@ -11,6 +11,48 @@
 <link rel="stylesheet" href="css/pages.css">
 <link rel="stylesheet" href="css/responsive.css">
 <style>
+html {
+  --bg-main:#121212;
+  --bg-header:#181818;
+  --bg-section:#1f1f1f;
+  --bg-card:#2a2a2a;
+  --bg-menu:#282828;
+  --bg-menu-hover:#3e3e3e;
+  --text-main:#fff;
+  --text-dim:#b3b3b3;
+  --accent:#ff2a5f;
+  --accent-hover:#ff5c86;
+  --border:#333;
+}
+
+:root {
+  --bg-main:#121212;
+  --bg-header:#181818;
+  --bg-section:#1f1f1f;
+  --bg-card:#2a2a2a;
+  --bg-menu:#282828;
+  --bg-menu-hover:#3e3e3e;
+  --text-main:#fff;
+  --text-dim:#b3b3b3;
+  --accent:#ff2a5f;
+  --accent-hover:#ff5c86;
+  --border:#333;
+}
+
+:root {
+  --bg-main:#121212;
+  --bg-header:#181818;
+  --bg-section:#1f1f1f;
+  --bg-card:#2a2a2a;
+  --bg-menu:#282828;
+  --bg-menu-hover:#3e3e3e;
+  --text-main:#fff;
+  --text-dim:#b3b3b3;
+  --accent:#ff2a5f;
+  --accent-hover:#ff5c86;
+  --border:#333;
+}
+
 :root {
   --bg-main:#121212;
   --bg-header:#181818;
@@ -47,6 +89,15 @@ body{
   top: 0;
   z-index: 100;
   height: 64px; /* Fixed height for consistency */
+}
+
+.header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+.user-profile {
+    display: none; /* Hide the profile name to save space on tiny screens */
 }
 
 .left-section, .right-section{
@@ -727,6 +778,113 @@ body{
     transition: background 0.1s ease;
 }
 
+/* Add a small '1' badge for Repeat One mode */
+#repeatBtn[title="Repeat One"]::after {
+    content: '1';
+    font-size: 10px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: var(--bg-main);
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.queue-container {
+    position: fixed;
+    right: -350px; /* Hidden by default */
+    top: 80px;
+    bottom: 90px;
+    width: 300px;
+    background: var(--bg-section);
+    border-left: 1px solid var(--border);
+    transition: right 0.3s ease;
+    z-index: 99;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.queue-container.active {
+    right: 0;
+}
+
+.queue-list {
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.queue-item:hover {
+    background: var(--bg-menu-hover);
+}
+
+.queue-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.queue-info h4 {
+    font-size: 14px;
+    margin: 0;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queue-info p {
+    font-size: 12px;
+    margin: 0;
+    color: var(--text-dim);
+}
+
+.close-queue {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-queue:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    transform: scale(1.1);
+}
+
+.close-queue svg {
+    display: block;
+}
+
 .card img {
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -772,6 +930,163 @@ body{
   user-select: none;
 }
 
+/* --- MOBILE RESPONSIVENESS --- */
+@media screen and (max-width: 768px) {
+    body {
+        overflow-y: auto; /* Allow page scrolling on mobile */
+        overflow-x: hidden;
+    }
+    .header {
+        height: auto; /* Header can wrap on small screens */
+        padding: 10px 12px;
+        flex-wrap: wrap;
+    }
+    .header-logo {
+        position: static !important;
+        transform: none !important;
+        font-size: 20px;
+        margin: 0 auto;
+        order: 2;
+    }
+    .left-section {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .right-section {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+    }
+    .search-wrapper {
+        width: 100%;
+        justify-content: center;
+        padding: 0 6px;
+    }
+    .search-input {
+        width: min(320px, calc(100vw - 120px));
+    }
+    .main-sections {
+        height: auto;
+        overflow-y: auto;
+        padding: 16px;
+        padding-bottom: 260px; /* Keep content above the fixed music bar + mobile nav */
+        max-width: 100%;
+    }
+    .music-bar {
+        height: 170px;
+        max-height: 60vh;
+        overflow-y: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+    .music-info, .music-controls, .music-extras {
+        width: 100%;
+    }
+    .control-buttons {
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .play-button-overlay {
+        transform: translateY(0); /* No hover on mobile, show button */
+        opacity: 1;
+    }
+
+    .sidebar {
+        display: none !important; /* This hides the sidebar on phones */
+    }
+    .main-content {
+        margin-left: 0 !important; /* This lets the music fill the screen */
+        padding-bottom: 180px;
+    }
+    .mobile-nav {
+        display: flex !important; /* This shows your Home/Search icons */
+        position: fixed;
+        bottom: 170px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: #181818;
+        border-top: 1px solid #333;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+    }
+    .player-bar {
+        flex-direction: column; /* Stacks the player so it fits on a narrow screen */
+        height: auto;
+        padding: 10px;
+    }
+
+    /* Smaller grids on mobile */
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 14px;
+    }
+    .top-mixes-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .section {
+        padding: 14px;
+    }
+    .section-title {
+        font-size: 18px;
+    }
+
+    /* Make sliders draggable on touch devices */
+    .progress-slider::-webkit-slider-thumb {
+        opacity: 1;
+    }
+
+    /* Keep sliding queue usable on narrow screens */
+    .queue-container {
+        width: 92vw;
+        max-width: 360px;
+        right: -92vw;
+        bottom: 170px;
+    }
+    .queue-container.active {
+        right: 0;
+    }
+
+    .custom-scrollbar-track {
+        bottom: 170px;
+    }
+}
+
+/* Hide mobile nav on computers */
+@media screen and (min-width: 769px) {
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
+/* ADD THIS ONCE AT THE END OF YOUR STYLE TAG */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        display: none !important; /* This hides the sidebar on mobile */
+    }
+    .main-content {
+        margin-left: 0 !important; /* This moves your music to the edge */
+        padding-bottom: 180px;
+    }
+    .mobile-nav {
+        display: flex !important; /* This shows your 3 bottom icons */
+        position: fixed;
+        bottom: 170px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: #181818;
+        border-top: 1px solid #333;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+    }
+}
 
 </style>
 </head>
@@ -1107,9 +1422,25 @@ body{
     </div>
     <div class="music-controls">
         <div class="control-buttons">
+            <button class="control-btn" id="repeatBtn" title="Repeat Off">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
+        </svg>
+        </button>
             <button class="control-btn" id="prevBtn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
             <button class="control-btn play-pause" id="masterPlay"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
             <button class="control-btn" id="nextBtn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                <button class="control-btn" id="shuffleBtn" title="Shuffle Off">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.59 10.83l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.37-3.37z"/>
+        </svg>
+    </button>
+
+    <button class="control-btn" id="queueBtn" title="View Queue">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
+        </svg>
+    </button>
         </div>
         <div class="progress-container">
             <span class="time-text" id="currentTime">0:00</span>
@@ -1120,6 +1451,26 @@ body{
             <span class="time-text" id="durationTime">0:00</span>
         </div>
     </div>
+
+    <div class="mobile-nav">
+    <div class="nav-item" onclick="showSection('home')"><i class="fa-solid fa-house"></i></div>
+    <div class="nav-item" onclick="showSection('search')"><i class="fa-solid fa-magnifying-glass"></i></div>
+    <div class="nav-item" onclick="showSection('library')"><i class="fa-solid fa-book"></i></div>
+</div>
+
+    <div class="queue-container" id="queueContainer">
+    <div class="queue-header">
+        <h3>Next Song</h3>
+        <button class="close-queue" id="closeQueue" title="Close Queue">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </div>
+    <div id="queueList" class="queue-list">
+        </div>
+</div>
+
     <div class="music-extras">
         <input type="range" id="volSlider" class="volume-slider" min="0" max="100" value="70">
         
@@ -1146,6 +1497,9 @@ let currentSongIndex = -1;
 let autoplayQueue = []; // Queue for songs from search results
 let isAutoplayMode = false; // Tracks if we're in autoplay mode (search-based)
 let currentSearchQuery = ''; // Store the search query for finding related songs
+let repeatMode = 0; // 0: Off, 1: Repeat All, 2: Repeat One
+let isShuffle = false;
+let originalPlaylist = [...playlist]; // Keep a backup of the original order
 
 // 2. YOUTUBE API INITIALIZATION
 function onYouTubeIframeAPIReady() {
@@ -1362,6 +1716,10 @@ async function playGenreAutomix(genre, genreImg) {
     }
 }
 
+        if (isShuffle) {
+    autoplayQueue = autoplayQueue.sort(() => Math.random() - 0.5);
+}
+
 // 4b. FETCH RELATED SONGS FROM YOUTUBE
 async function fetchRelatedSongs(query) {
     try {
@@ -1382,34 +1740,36 @@ async function fetchRelatedSongs(query) {
     }
 }
 
-// 4c. AUTOPLAY NEXT SONG (handles both playlist and search-based autoplay)
 function playNextSongAutomatic() {
+    if (repeatMode === 2) {
+        // REPEAT ONE: Replay current video
+        player.seekTo(0);
+        player.playVideo();
+        return;
+    }
+
     if (isAutoplayMode) {
-        // Autoplay mode for search results - play from autoplay queue
+        // ... (Keep your existing Autoplay/Search logic)
         if (autoplayQueue.length > 0) {
-            const nextSong = autoplayQueue.shift(); // Get and remove first song from queue
+            const nextSong = autoplayQueue.shift();
             playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
-            showToast('Automix: ' + nextSong.title);
-            
-            // Fetch more related songs if queue is running low
-            if (autoplayQueue.length < 5 && currentSearchQuery) {
-                fetchRelatedSongs(currentSearchQuery);
-            }
-        } else {
-            // Queue is empty, fetch more songs
-            if (currentSearchQuery) {
-                fetchRelatedSongs(currentSearchQuery);
-            }
+        } else if (repeatMode === 1 && currentSearchQuery) {
+            // If Repeat All is on in search mode, refetch to keep it going
+            fetchRelatedSongs(currentSearchQuery);
         }
     } else {
-        // Regular playlist autoplay
+        // REGULAR PLAYLIST LOGIC
         if (currentSongIndex < playlist.length - 1) {
             currentSongIndex++;
             const nextSong = playlist[currentSongIndex];
             playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
-            showToast('Playing: ' + nextSong.title);
+        } else if (repeatMode === 1) {
+            // REPEAT ALL: Back to the first song
+            currentSongIndex = 0;
+            const nextSong = playlist[currentSongIndex];
+            playSong(nextSong.id, nextSong.title, nextSong.artist, nextSong.img);
         } else {
-            console.log('Playlist finished. All songs have been played.');
+            console.log('Playlist finished.');
         }
     }
 }
@@ -1466,6 +1826,102 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+
+    const repeatBtn = document.getElementById('repeatBtn');
+
+repeatBtn.onclick = function() {
+    repeatMode = (repeatMode + 1) % 3; // Toggle through 0, 1, 2
+    
+    switch(repeatMode) {
+        case 0: // Off
+            repeatBtn.style.color = "var(--text-dim)";
+            repeatBtn.title = "Repeat Off";
+            // Remove any "1" indicator if you add one later
+            break;
+        case 1: // Repeat All
+            repeatBtn.style.color = "var(--accent)";
+            repeatBtn.title = "Repeat All";
+            break;
+        case 2: // Repeat One
+            repeatBtn.style.color = "var(--accent)";
+            repeatBtn.title = "Repeat One";
+            // Optional: You could wrap the icon in a span to show a small "1"
+            break;
+    }
+    showToast(repeatBtn.title);
+};
+
+const shuffleBtn = document.getElementById('shuffleBtn');
+
+shuffleBtn.onclick = function() {
+    isShuffle = !isShuffle;
+    
+    if (isShuffle) {
+        shuffleBtn.style.color = "var(--accent)";
+        shuffleBtn.title = "Shuffle On";
+        // Randomize the current playlist array
+        playlist = playlist.sort(() => Math.random() - 0.5);
+    } else {
+        shuffleBtn.style.color = "var(--text-dim)";
+        shuffleBtn.title = "Shuffle Off";
+        // Restore the original order
+        playlist = [...originalPlaylist];
+    }
+    
+    // Optional: After shuffling, update the currentSongIndex to match 
+    // the song currently playing so "Next" still works correctly.
+    const currentSongTitle = document.querySelector('.song-name').textContent;
+    currentSongIndex = playlist.findIndex(song => song.title === currentSongTitle);
+    
+    showToast(shuffleBtn.title);
+};
+
+const queueBtn = document.getElementById('queueBtn'); // Add this ID to a new button in HTML
+const queueContainer = document.getElementById('queueContainer');
+const closeQueue = document.getElementById('closeQueue');
+
+if(queueBtn) {
+    queueBtn.onclick = () => {
+        queueContainer.classList.toggle('active');
+        updateQueueUI();
+    };
+}
+
+if(closeQueue) {
+    closeQueue.onclick = () => queueContainer.classList.remove('active');
+}
+
+function updateQueueUI() {
+    const queueList = document.getElementById('queueList');
+    queueList.innerHTML = ''; // Clear current list
+
+    // Start showing from the next song in the array
+    const nextSongs = playlist.slice(currentSongIndex + 1);
+
+    if (nextSongs.length === 0) {
+        queueList.innerHTML = '<p style="color:var(--text-dim); font-size:13px;">No upcoming songs</p>';
+        return;
+    }
+
+    nextSongs.forEach((song, index) => {
+        const item = document.createElement('div');
+        item.className = 'queue-item';
+        item.onclick = () => {
+            currentSongIndex = playlist.indexOf(song);
+            playSong(song.id, song.title, song.artist, song.img);
+            updateQueueUI(); // Refresh UI
+        };
+
+        item.innerHTML = `
+            <img src="${song.img}" alt="${song.title}">
+            <div class="queue-info">
+                <h4>${song.title}</h4>
+                <p>${song.artist}</p>
+            </div>
+        `;
+        queueList.appendChild(item);
+    });
+}
 
     // Progress Bar Logic
     const progressSlider = document.getElementById('progressSlider');
@@ -1532,6 +1988,55 @@ const tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+function showSection(id) {
+    const sections = ['home', 'search', 'library'];
+    sections.forEach(secId => {
+        const el = document.getElementById(secId);
+        if (el) {
+            el.style.display = (secId === id) ? '' : 'none';
+        }
+    });
+
+    const queue = document.getElementById('queueContainer');
+    if (queue) {
+        queue.classList.remove('active');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Toggle dropdown menus opened by the header buttons
+function toggleMenu(menuId, event) {
+    // Prevent the document click handler from re-closing the menu immediately
+    if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
+
+    // Close other header menus
+    ['hamburgerMenu', 'libraryMenu', 'profileMenu'].forEach(id => {
+        if (!id || id === menuId) return;
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    const target = document.getElementById(menuId);
+    if (!target) return;
+
+    const isOpen = target.style.display === 'flex' || target.style.display === 'block';
+    target.style.display = isOpen ? 'none' : 'flex';
+}
+
+// Close header menus when clicking elsewhere
+document.addEventListener('click', () => {
+    ['hamburgerMenu', 'libraryMenu', 'profileMenu'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+});
+
+// This makes sure the Home page shows up right when you open the site
+document.addEventListener('DOMContentLoaded', () => {
+    showSection('home');
+});
 </script>
 </body>
 </html>
