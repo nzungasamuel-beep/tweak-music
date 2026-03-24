@@ -241,142 +241,299 @@ body.desktop-view .music-bar {
    ======================================== */
 .mobile-header {
     display: none;
+    background: linear-gradient(135deg, var(--bg-header), var(--bg-section));
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    height: 60px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.mobile-header .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 1px;
+}
+
+.mobile-header .menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-header .menu-btn:hover {
+    background: var(--bg-menu-hover);
+    transform: scale(1.05);
+}
+
+.mobile-header .menu-btn:active {
+    transform: scale(0.95);
+}
+
+.mobile-header .profile-pic {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 42, 95, 0.3);
+}
+
+.mobile-header .profile-pic:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 42, 95, 0.5);
+}
+
+.mobile-header .profile-pic:active {
+    transform: scale(0.95);
+}
+
+.mobile-header .profile-pic svg {
+    color: white;
 }
 
 .mobile-menu {
     display: none;
     position: fixed;
-    top: 56px;
+    top: 60px;
     left: 0;
     right: 0;
     bottom: 0;
     background: var(--bg-main);
     z-index: 9999;
     overflow-y: auto;
+    animation: slideIn 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .mobile-menu.active {
     display: block;
 }
 
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+}
+
+.mobile-menu-overlay.active {
+    display: block;
+}
+
 .menu-section {
-    padding: 16px;
+    padding: 20px;
     border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+    background: var(--bg-section);
+}
+
+.menu-section:last-child {
+    border-bottom: none;
+}
+
+.menu-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+}
+
+.menu-section:last-child {
+    border-bottom: none;
 }
 
 .menu-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
 }
 
 .menu-item {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 14px;
-    background: none;
+    padding: 16px;
+    background: transparent;
     border: none;
     color: var(--text-main);
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     width: 100%;
     text-align: left;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+    background: var(--bg-menu-hover);
+    transform: translateX(4px);
 }
 
 .menu-item:active {
-    background: var(--bg-menu-hover);
+    background: var(--bg-card);
 }
 
-.menu-item i {
-    width: 24px;
-    font-size: 18px;
-    color: var(--text-dim);
+.menu-item svg {
+    transition: all 0.2s ease;
+}
+
+.menu-item:hover svg {
+    color: var(--accent);
+    transform: scale(1.1);
 }
 
 .mobile-content {
     display: none;
+    padding: 16px;
+    padding-bottom: 140px;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 16px;
-    background: var(--bg-section);
-    border-radius: 12px;
-    margin-bottom: 20px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 42, 95, 0.2);
 }
 
 .search-bar input {
     flex: 1;
-    background: none;
+    background: transparent;
     border: none;
     color: var(--text-main);
     font-size: 16px;
     font-family: inherit;
     outline: none;
+    font-weight: 500;
 }
 
 .search-bar input::placeholder {
     color: var(--text-dim);
+    font-weight: 400;
 }
 
 .search-icon {
-    color: var(--text-dim);
-    font-size: 20px;
+    color: var(--accent);
+    transition: all 0.2s ease;
+}
+
+.search-bar:hover .search-icon {
+    transform: scale(1.1);
 }
 
 .tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 24px;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding: 4px 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tab {
-    padding: 8px 20px;
+    padding: 12px 24px;
     background: var(--bg-card);
-    border: none;
+    border: 1px solid transparent;
     color: var(--text-main);
     font-size: 14px;
-    font-weight: 500;
-    border-radius: 20px;
+    font-weight: 600;
+    border-radius: 24px;
     cursor: pointer;
     white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab:hover {
+    background: var(--bg-menu-hover);
+    transform: translateY(-2px);
 }
 
 .tab.active {
-    background: var(--text-main);
-    color: var(--bg-main);
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 42, 95, 0.3);
 }
 
 .tab:active {
-    transform: scale(0.98);
+    transform: scale(0.95);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
 }
 
 .genre-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 14px;
+    margin-bottom: 28px;
 }
 
 .genre-card {
     aspect-ratio: 1/1;
-    background: var(--bg-card);
-    border-radius: 12px;
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-section));
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.genre-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(255, 42, 95, 0.3);
+    border-color: var(--accent);
 }
 
 .genre-card:active {
@@ -388,42 +545,59 @@ body.desktop-view .music-bar {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.6;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+
+.genre-card:hover img {
+    opacity: 0.7;
+    transform: scale(1.1);
 }
 
 .genre-card span {
     position: relative;
     z-index: 1;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+    letter-spacing: 0.5px;
 }
 
 .song-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .song-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
+    gap: 14px;
+    padding: 14px;
     background: var(--bg-card);
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.song-item:hover {
+    background: var(--bg-menu-hover);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .song-item:active {
-    background: var(--bg-menu-hover);
+    background: var(--bg-card);
+    transform: scale(0.98);
 }
 
 .song-item img {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
     object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .song-info {
@@ -432,16 +606,17 @@ body.desktop-view .music-bar {
 }
 
 .song-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 4px;
+    color: var(--text-main);
 }
 
 .song-artist {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dim);
     white-space: nowrap;
     overflow: hidden;
@@ -449,17 +624,24 @@ body.desktop-view .music-bar {
 }
 
 .play-btn {
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
     border: none;
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(255, 42, 95, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(255, 42, 95, 0.6);
 }
 
 .play-btn:active {
@@ -473,19 +655,21 @@ body.desktop-view .music-bar {
     left: 0;
     right: 0;
     z-index: 998;
-    background: var(--bg-section);
+    background: linear-gradient(135deg, var(--bg-section), var(--bg-card));
     border-top: 1px solid var(--border);
     padding: 12px 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .mini-player img {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
     object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .mini-info {
@@ -494,16 +678,17 @@ body.desktop-view .music-bar {
 }
 
 .mini-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 4px;
+    color: var(--text-main);
 }
 
 .mini-artist {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-dim);
     white-space: nowrap;
     overflow: hidden;
@@ -512,16 +697,26 @@ body.desktop-view .music-bar {
 
 .mini-controls {
     display: flex;
-    gap: 16px;
+    gap: 18px;
 }
 
 .mini-btn {
-    background: none;
+    background: transparent;
     border: none;
     color: var(--text-main);
-    font-size: 24px;
     cursor: pointer;
-    padding: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.mini-btn:hover {
+    background: var(--bg-menu-hover);
+    transform: scale(1.1);
+}
+
+.mini-btn:active {
+    transform: scale(0.95);
 }
 
 .bottom-nav {
@@ -530,38 +725,64 @@ body.desktop-view .music-bar {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
-    background: var(--bg-header);
+    height: 68px;
+    background: linear-gradient(135deg, var(--bg-header), var(--bg-section));
     border-top: 1px solid var(--border);
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 8px;
-    background: none;
+    gap: 6px;
+    padding: 10px 12px;
+    background: transparent;
     border: none;
     color: var(--text-dim);
     cursor: pointer;
-    min-width: 64px;
+    min-width: 70px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
-.nav-item i {
-    font-size: 24px;
-}
-
-.nav-item span {
-    font-size: 11px;
-    font-weight: 500;
+.nav-item:hover {
+    background: var(--bg-menu-hover);
+    transform: translateY(-4px);
 }
 
 .nav-item.active {
     color: var(--accent);
+}
+
+.nav-item.active svg {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ========================================
@@ -585,6 +806,173 @@ body.desktop-view .music-bar {
 .search-icon {
     width: 20px;
     height: 20px;
+}
+
+/* ========================================
+   FULLSCREEN PLAYER
+   ======================================== */
+.fullscreen-player {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-main);
+    z-index: 10000;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.fullscreen-player.active {
+    display: flex;
+}
+
+.close-fullscreen {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-main);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10001;
+}
+
+.close-fullscreen:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.fullscreen-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 40px;
+}
+
+.fullscreen-artwork {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.fullscreen-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fullscreen-info {
+    text-align: center;
+}
+
+.fullscreen-info h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+
+.fullscreen-info p {
+    font-size: 20px;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+.fullscreen-controls {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.fs-control-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.fs-control-btn:hover {
+    transform: scale(1.1);
+    color: var(--accent);
+}
+
+.fs-play-btn {
+    background: var(--accent);
+    border: none;
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(255, 42, 95, 0.4);
+}
+
+.fs-play-btn:hover {
+    transform: scale(1.1);
+    background: var(--accent-hover);
+    box-shadow: 0 12px 32px rgba(255, 42, 95, 0.6);
+}
+
+.fullscreen-progress {
+    width: 100%;
+    max-width: 600px;
+}
+
+.fullscreen-progress .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.fullscreen-progress .progress-bar-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.fullscreen-progress .progress-slider {
+    width: 100%;
+    height: 6px;
+    background: #4f4f4f;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+.fullscreen-progress .progress-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fullscreen-progress .progress-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
 }
 
 /* HEADER */
@@ -1699,6 +2087,31 @@ body.desktop-view .music-bar {
         <button onclick="showToast('Loading Liked Songs...')">Liked Songs</button>
         <button onclick="showToast('Opening Playlists...')">Your Playlists</button>
     </div>
+
+    <div class="profile-menu" id="profileMenu">
+        <button onclick="showToast('Profile Settings')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Profile Settings
+        </button>
+        <button onclick="showToast('App Settings')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 012 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 010-2.83 2 2 0 012.83 0l.06-.06a1.65 1.65 0 001.51-1H21a2 2 0 002-2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            App Settings
+        </button>
+        <button onclick="window.location.href='login.html'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Sign Out
+        </button>
+    </div>
   </div>
 
   <div class="header-logo"><span>Tweak</span></div>
@@ -1715,6 +2128,12 @@ body.desktop-view .music-bar {
         <input type="text" id="searchInput" class="search-input" placeholder="Search for music..." onkeyup="handleSearchKeyPress(event)">
         <button class="clear-search-btn" id="closeSearch" onclick="resetSearch()">&times;</button>
         <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+    </div>
+
+    <div class="profile-icon" onclick="toggleMenu('profileMenu', event)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4 1.79-4 4-4 4 1.79 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
     </div>
 </div>
 </header>
@@ -2072,11 +2491,63 @@ body.desktop-view .music-bar {
     </div>
 </div>
 
+<!-- Full Screen Player Overlay -->
+<div class="fullscreen-player" id="fullscreenPlayer">
+    <button class="close-fullscreen" onclick="closeFullscreenPlayer()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </button>
+
+    <div class="fullscreen-content">
+        <div class="fullscreen-artwork">
+            <img id="fullscreenArtwork" src="https://picsum.photos/seed/stunta/400">
+        </div>
+
+        <div class="fullscreen-info">
+            <h2 id="fullscreenTitle">Select a Song</h2>
+            <p id="fullscreenArtist">Artist Name</p>
+        </div>
+
+        <div class="fullscreen-controls">
+            <button class="fs-control-btn" onclick="document.getElementById('prevBtn').click()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+            </button>
+
+            <button class="fs-play-btn" onclick="document.getElementById('masterPlay').click()">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" id="fsPlayIcon">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
+
+            <button class="fs-control-btn" onclick="document.getElementById('nextBtn').click()">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="fullscreen-progress">
+            <div class="progress-container">
+                <span class="time-text" id="fsCurrentTime">0:00</span>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" id="fsProgressFill"></div>
+                    <input type="range" id="fsProgressSlider" class="progress-slider" min="0" max="100" value="0">
+                </div>
+                <span class="time-text" id="fsDurationTime">0:00</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Mobile Layout -->
 <div class="mobile-layout">
     <!-- Mobile Header -->
     <header class="mobile-header">
-        <button class="menu-btn" onclick="toggleMenu('hamburgerMenu', event)">
+        <button class="menu-btn" onclick="toggleMenu('mobileMenu')">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" stroke-width="2" stroke-linecap="round">
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <line x1="3" y1="12" x2="21" y2="12"/>
@@ -2084,15 +2555,25 @@ body.desktop-view .music-bar {
             </svg>
         </button>
         <div class="logo">Tweak</div>
-        <button class="menu-btn" onclick="activateSearch()">
+        <div class="profile-pic" onclick="toggleMenu('profileMenu')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
             </svg>
-        </button>
+        </div>
     </header>
 
     <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="menu-title">Menu</div>
+            <button class="close-menu-btn" onclick="toggleMenu('mobileMenu')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
         <div class="menu-section">
             <div class="menu-title">Library</div>
             <button class="menu-item" onclick="showToast('Liked Songs')">
@@ -2120,13 +2601,6 @@ body.desktop-view .music-bar {
 
         <div class="menu-section">
             <div class="menu-title">Settings</div>
-            <button class="menu-item" onclick="showToast('Profile Settings')">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Profile Settings
-            </button>
             <button class="menu-item" onclick="showToast('App Settings')">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
                     <circle cx="12" cy="12" r="3"/>
@@ -2153,13 +2627,6 @@ body.desktop-view .music-bar {
                 <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
             <input type="text" placeholder="Search for music..." id="mobileSearchInput">
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" onclick="showSection('home')">Home</button>
-            <button class="tab" onclick="activateSearch()">Search</button>
-            <button class="tab" onclick="toggleMenu('libraryMenu', event)">Library</button>
         </div>
 
         <!-- Top Mixes -->
@@ -2257,24 +2724,24 @@ body.desktop-view .music-bar {
     </main>
 
     <!-- Mini Player -->
-    <div class="mini-player" id="miniPlayer">
+    <div class="mini-player" id="miniPlayer" onclick="openFullscreenPlayer()">
         <img src="https://picsum.photos/seed/stunta/200">
         <div class="mini-info">
             <div class="mini-title">Select a Song</div>
             <div class="mini-artist">Artist Name</div>
         </div>
         <div class="mini-controls">
-            <button class="mini-btn" onclick="document.getElementById('prevBtn').click()">
+            <button class="mini-btn" onclick="event.stopPropagation(); document.getElementById('prevBtn').click()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
                 </svg>
             </button>
-            <button class="mini-btn" onclick="document.getElementById('masterPlay').click()">
+            <button class="mini-btn" onclick="event.stopPropagation(); document.getElementById('masterPlay').click()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="playIcon">
                     <path d="M8 5v14l11-7z"/>
                 </svg>
             </button>
-            <button class="mini-btn" onclick="document.getElementById('nextBtn').click()">
+            <button class="mini-btn" onclick="event.stopPropagation(); document.getElementById('nextBtn').click()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
                 </svg>
@@ -2472,6 +2939,27 @@ function handleSearchKeyPress(event) {
         document.getElementById('searchResultsDropdown').classList.remove('show');
         document.getElementById('searchResultsDropdown').innerHTML = '';
     }
+}
+
+// Helper function to update both music bar and mini-player
+function updatePlayerUI(title, artist, img) {
+    // Update desktop music bar
+    const songNameEl = document.querySelector('.song-name');
+    const artistEl = document.querySelector('.song-artist');
+    const musicImgEl = document.querySelector('.music-info img');
+
+    if (songNameEl) songNameEl.textContent = title;
+    if (artistEl) artistEl.textContent = artist;
+    if (musicImgEl) musicImgEl.src = img;
+
+    // Update mobile mini-player
+    const miniTitleEl = document.querySelector('.mini-title');
+    const miniArtistEl = document.querySelector('.mini-artist');
+    const miniImgEl = document.querySelector('.mini-player img');
+
+    if (miniTitleEl) miniTitleEl.textContent = title;
+    if (miniArtistEl) miniArtistEl.textContent = artist;
+    if (miniImgEl) miniImgEl.src = img;
 }
 
 // 4. CORE PLAYBACK FUNCTION
@@ -2774,8 +3262,19 @@ function updateQueueUI() {
 
     // Progress Bar Logic
     const progressSlider = document.getElementById('progressSlider');
+    const fsProgressSlider = document.getElementById('fsProgressSlider');
+
     if (progressSlider) {
         progressSlider.oninput = function() {
+            if (player && player.getDuration) {
+                const seekTo = (this.value / 100) * player.getDuration();
+                player.seekTo(seekTo, true);
+            }
+        };
+    }
+
+    if (fsProgressSlider) {
+        fsProgressSlider.oninput = function() {
             if (player && player.getDuration) {
                 const seekTo = (this.value / 100) * player.getDuration();
                 player.seekTo(seekTo, true);
@@ -2868,6 +3367,21 @@ function toggleMenu(menuId, event) {
     // Prevent the document click handler from re-closing the menu immediately
     if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
 
+    // Handle mobile menu with overlay
+    if (menuId === 'mobileMenu') {
+        const menu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('mobileMenuOverlay');
+
+        if (menu.classList.contains('active')) {
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+        } else {
+            menu.classList.add('active');
+            overlay.classList.add('active');
+        }
+        return;
+    }
+
     // Close other header menus
     ['hamburgerMenu', 'libraryMenu', 'profileMenu'].forEach(id => {
         if (!id || id === menuId) return;
@@ -2901,11 +3415,95 @@ document.addEventListener('click', () => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
+
+    // Close mobile menu when clicking overlay
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', () => {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) {
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+            }
+        });
+    }
 });
+
+// Fullscreen Player Functions
+function openFullscreenPlayer() {
+    const player = document.getElementById('fullscreenPlayer');
+    player.classList.add('active');
+
+    // Update fullscreen player with current song info
+    const songName = document.querySelector('.song-name')?.textContent || document.querySelector('.mini-title')?.textContent || 'Select a Song';
+    const artistName = document.querySelector('.song-artist')?.textContent || document.querySelector('.mini-artist')?.textContent || 'Artist Name';
+    const artworkSrc = document.querySelector('.music-info img')?.src || document.querySelector('.mini-player img')?.src || 'https://picsum.photos/seed/stunta/400';
+
+    document.getElementById('fullscreenTitle').textContent = songName;
+    document.getElementById('fullscreenArtist').textContent = artistName;
+    document.getElementById('fullscreenArtwork').src = artworkSrc;
+}
+
+function closeFullscreenPlayer() {
+    const player = document.getElementById('fullscreenPlayer');
+    player.classList.remove('active');
+}
 
 // This makes sure the Home page shows up right when you open the site
 document.addEventListener('DOMContentLoaded', () => {
     showSection('home');
+
+    // Add click listeners to music bar and cards
+    const musicBar = document.getElementById('musicBar');
+    if (musicBar) {
+        musicBar.addEventListener('click', (e) => {
+            // Don't open fullscreen if clicking on controls
+            if (!e.target.closest('.music-controls') && !e.target.closest('.music-extras')) {
+                openFullscreenPlayer();
+            }
+        });
+    }
+
+    // Add click listeners to all cards
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+            setTimeout(openFullscreenPlayer, 500);
+        });
+    });
+
+    // Add click listeners to mobile cards
+    document.querySelectorAll('.mobile-content .card').forEach(card => {
+        card.addEventListener('click', () => {
+            setTimeout(openFullscreenPlayer, 500);
+        });
+    });
+
+    // Add click listeners to mix cards
+    document.querySelectorAll('.mix-card').forEach(card => {
+        card.addEventListener('click', () => {
+            setTimeout(openFullscreenPlayer, 500);
+        });
+    });
+
+    // Sync fullscreen play button icon with main player
+    const masterPlay = document.getElementById('masterPlay');
+    const fsPlayIcon = document.getElementById('fsPlayIcon');
+
+    if (masterPlay && fsPlayIcon) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    const masterPlayIcon = masterPlay.querySelector('svg path');
+                    const fsPath = fsPlayIcon.querySelector('path');
+                    if (masterPlayIcon && fsPath) {
+                        fsPath.setAttribute('d', masterPlayIcon.getAttribute('d'));
+                    }
+                }
+            });
+        });
+
+        observer.observe(masterPlay, { childList: true, subtree: true });
+    }
 });
 
 
