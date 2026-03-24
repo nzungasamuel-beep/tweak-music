@@ -210,6 +210,33 @@ body.desktop-view .right-section {
 }
 
 /* ========================================
+   LAYOUT CONTROL
+   ======================================== */
+.mobile-layout {
+    display: none;
+}
+
+body.mobile-view .mobile-layout {
+    display: block;
+}
+
+body.mobile-view .header,
+body.mobile-view .main-sections,
+body.mobile-view .music-bar {
+    display: none !important;
+}
+
+body.desktop-view .mobile-layout {
+    display: none;
+}
+
+body.desktop-view .header,
+body.desktop-view .main-sections,
+body.desktop-view .music-bar {
+    display: flex !important;
+}
+
+/* ========================================
    MOBILE COMPONENT STYLES
    ======================================== */
 .mobile-header {
@@ -535,6 +562,29 @@ body.desktop-view .right-section {
 
 .nav-item.active {
     color: var(--accent);
+}
+
+/* ========================================
+   SVG ICON STYLING
+   ======================================== */
+.menu-btn svg,
+.nav-item svg,
+.mini-btn svg,
+.menu-item svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.menu-item svg {
+    width: 18px;
+    height: 18px;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
 }
 
 /* HEADER */
@@ -2022,167 +2072,244 @@ body.desktop-view .right-section {
     </div>
 </div>
 
-<!-- Mobile Header -->
-<header class="mobile-header">
-    <button class="menu-btn" onclick="toggleMobileMenu()">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-    <div class="logo">Tweak</div>
-    <button class="menu-btn" onclick="showMobileSearch()">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
-</header>
+<!-- Mobile Layout -->
+<div class="mobile-layout">
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="menu-btn" onclick="toggleMenu('hamburgerMenu', event)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" stroke-width="2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
+        <div class="logo">Tweak</div>
+        <button class="menu-btn" onclick="activateSearch()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        </button>
+    </header>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-    <div class="menu-section">
-        <div class="menu-title">Library</div>
-        <button class="menu-item" onclick="showSection('library')">
-            <i class="fa-solid fa-heart"></i>
-            Liked Songs
-        </button>
-        <button class="menu-item" onclick="showSection('playlists')">
-            <i class="fa-solid fa-list"></i>
-            Your Playlists
-        </button>
-        <button class="menu-item" onclick="showSection('recent')">
-            <i class="fa-solid fa-clock"></i>
-            Recently Played
-        </button>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-section">
+            <div class="menu-title">Library</div>
+            <button class="menu-item" onclick="showToast('Liked Songs')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+                Liked Songs
+            </button>
+            <button class="menu-item" onclick="showToast('Your Playlists')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <circle cx="18" cy="16" r="3"/>
+                </svg>
+                Your Playlists
+            </button>
+            <button class="menu-item" onclick="showToast('Recently Played')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Recently Played
+            </button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-title">Settings</div>
+            <button class="menu-item" onclick="showToast('Profile Settings')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile Settings
+            </button>
+            <button class="menu-item" onclick="showToast('App Settings')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 012-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001.51 1H21a2 2 0 002-2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                App Settings
+            </button>
+            <button class="menu-item" onclick="window.location.href='login.html'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign Out
+            </button>
+        </div>
     </div>
 
-    <div class="menu-section">
-        <div class="menu-title">Settings</div>
-        <button class="menu-item" onclick="showToast('Profile Settings')">
-            <i class="fa-solid fa-user"></i>
-            Profile Settings
-        </button>
-        <button class="menu-item" onclick="showToast('App Settings')">
-            <i class="fa-solid fa-gear"></i>
-            App Settings
-        </button>
+    <!-- Mobile Content -->
+    <main class="mobile-content">
+        <!-- Search Section -->
+        <div class="search-bar hidden" id="mobileSearchBar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="search-icon">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" placeholder="Search for music..." id="mobileSearchInput">
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('home')">Home</button>
+            <button class="tab" onclick="activateSearch()">Search</button>
+            <button class="tab" onclick="toggleMenu('libraryMenu', event)">Library</button>
+        </div>
+
+        <!-- Top Mixes -->
+        <div class="section-header">
+            <h2 class="section-title">Top Mixes</h2>
+        </div>
+        <div class="top-mixes-grid">
+            <div class="mix-card" onclick="playGenreAutomix('amapiano', 'https://picsum.photos/seed/amapiano/80')">
+                <img src="https://picsum.photos/seed/amapiano/80">
+                <span>Amapiano</span>
+            </div>
+            <div class="mix-card" onclick="playGenreAutomix('afrobeats', 'https://picsum.photos/seed/afrobeats/80')">
+                <img src="https://picsum.photos/seed/afrobeats/80">
+                <span>Afrobeats</span>
+            </div>
+            <div class="mix-card" onclick="playGenreAutomix('dancehall', 'https://picsum.photos/seed/dancehall/80')">
+                <img src="https://picsum.photos/seed/dancehall/80">
+                <span>Dancehall</span>
+            </div>
+        </div>
+
+        <!-- Made For You -->
+        <div class="section-header">
+            <h2 class="section-title">Made For You</h2>
+        </div>
+        <div class="cards-grid">
+            <div class="card" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', '[With Tems, Omah Lay, Thukuthela, Jazzworx & Lekaa Beats]', 'https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg')">
+                <div class="card-img-wrapper">
+                    <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Isaka II (6am)</div>
+                <div class="card-subtitle">Ciza, Tems & Omah Lay</div>
+            </div>
+            <div class="card" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!', 'https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg')">
+                <div class="card-img-wrapper">
+                    <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">BANANA!</div>
+                <div class="card-subtitle">JELEEL</div>
+            </div>
+            <div class="card" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran', 'https://picsum.photos/seed/m2/200')">
+                <div class="card-img-wrapper">
+                    <img src="https://picsum.photos/seed/m2/200">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Daily Mix 2</div>
+                <div class="card-subtitle">Lojay, Melvitto...</div>
+            </div>
+        </div>
+
+        <!-- Popular Now -->
+        <div class="section-header">
+            <h2 class="section-title">Popular Now</h2>
+        </div>
+        <div class="cards-grid">
+            <div class="card" onclick="playGenreAutomix('hip hop', 'https://picsum.photos/seed/hiphop/200')">
+                <div class="card-img-wrapper">
+                    <img src="https://picsum.photos/seed/hiphop/200">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Hip Hop Rising</div>
+                <div class="card-subtitle">Latest releases</div>
+            </div>
+            <div class="card" onclick="playGenreAutomix('reggae', 'https://picsum.photos/seed/reggae/200')">
+                <div class="card-img-wrapper">
+                    <img src="https://picsum.photos/seed/reggae/200">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">Reggae Classics</div>
+                <div class="card-subtitle">Smooth vibes</div>
+            </div>
+            <div class="card" onclick="playGenreAutomix('rnb', 'https://picsum.photos/seed/rnb/200')">
+                <div class="card-img-wrapper">
+                    <img src="https://picsum.photos/seed/rnb/200">
+                    <div class="play-button-overlay">
+                        <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="card-title">R&B Essentials</div>
+                <div class="card-subtitle">Soul & Groove</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mini Player -->
+    <div class="mini-player" id="miniPlayer">
+        <img src="https://picsum.photos/seed/stunta/200">
+        <div class="mini-info">
+            <div class="mini-title">Select a Song</div>
+            <div class="mini-artist">Artist Name</div>
+        </div>
+        <div class="mini-controls">
+            <button class="mini-btn" onclick="document.getElementById('prevBtn').click()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+            </button>
+            <button class="mini-btn" onclick="document.getElementById('masterPlay').click()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="playIcon">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+            </button>
+            <button class="mini-btn" onclick="document.getElementById('nextBtn').click()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+            </button>
+        </div>
     </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="showSection('home')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Home</span>
+        </button>
+        <button class="nav-item" onclick="activateSearch()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>Search</span>
+        </button>
+        <button class="nav-item" onclick="toggleMenu('libraryMenu', event)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+            </svg>
+            <span>Library</span>
+        </button>
+    </nav>
 </div>
 
-<!-- Mobile Content -->
-<main class="mobile-content">
-    <!-- Search Section -->
-    <div class="search-bar hidden" id="mobileSearchBar">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" placeholder="Search for music..." id="mobileSearchInput">
-    </div>
 
-    <!-- Tabs -->
-    <div class="tabs">
-        <button class="tab active" onclick="switchTab(this, 'home')">Home</button>
-        <button class="tab" onclick="switchTab(this, 'browse')">Browse</button>
-        <button class="tab" onclick="switchTab(this, 'radio')">Radio</button>
-    </div>
-
-    <!-- Genre Grid -->
-    <div class="section-header">
-        <h2 class="section-title">Browse by Genre</h2>
-    </div>
-    <div class="genre-grid">
-        <div class="genre-card" onclick="playGenre('amapiano')">
-            <img src="https://picsum.photos/seed/amapiano/200">
-            <span>Amapiano</span>
-        </div>
-        <div class="genre-card" onclick="playGenre('afrobeats')">
-            <img src="https://picsum.photos/seed/afrobeats/200">
-            <span>Afrobeats</span>
-        </div>
-        <div class="genre-card" onclick="playGenre('dancehall')">
-            <img src="https://picsum.photos/seed/dancehall/200">
-            <span>Dancehall</span>
-        </div>
-        <div class="genre-card" onclick="playGenre('hiphop')">
-            <img src="https://picsum.photos/seed/hiphop/200">
-            <span>Hip Hop</span>
-        </div>
-        <div class="genre-card" onclick="playGenre('rnb')">
-            <img src="https://picsum.photos/seed/rnb/200">
-            <span>R&B</span>
-        </div>
-        <div class="genre-card" onclick="playGenre('pop')">
-            <img src="https://picsum.photos/seed/pop/200">
-            <span>Pop</span>
-        </div>
-    </div>
-
-    <!-- Song List -->
-    <div class="section-header">
-        <h2 class="section-title">Trending Now</h2>
-    </div>
-    <div class="song-list">
-        <div class="song-item" onclick="playSong('E1mZuIgYW1g', 'Isaka II (6am)', 'Ciza, Tems & Omah Lay')">
-            <img src="https://img.youtube.com/vi/E1mZuIgYW1g/maxresdefault.jpg">
-            <div class="song-info">
-                <div class="song-title">Isaka II (6am)</div>
-                <div class="song-artist">Ciza, Tems & Omah Lay</div>
-            </div>
-            <button class="play-btn">
-                <i class="fa-solid fa-play"></i>
-            </button>
-        </div>
-        <div class="song-item" onclick="playSong('S1onMipzkq8', 'BANANA!', 'JELEEL!')">
-            <img src="https://img.youtube.com/vi/S1onMipzkq8/maxresdefault.jpg">
-            <div class="song-info">
-                <div class="song-title">BANANA!</div>
-                <div class="song-artist">JELEEL!</div>
-            </div>
-            <button class="play-btn">
-                <i class="fa-solid fa-play"></i>
-            </button>
-        </div>
-        <div class="song-item" onclick="playSong('JGwWNGJdvx8', 'Daily Mix 2', 'Ed Sheeran')">
-            <img src="https://picsum.photos/seed/m2/200">
-            <div class="song-info">
-                <div class="song-title">Daily Mix 2</div>
-                <div class="song-artist">Ed Sheeran</div>
-            </div>
-            <button class="play-btn">
-                <i class="fa-solid fa-play"></i>
-            </button>
-        </div>
-    </div>
-</main>
-
-<!-- Mini Player -->
-<div class="mini-player" id="miniPlayer">
-    <img src="https://picsum.photos/seed/stunta/200">
-    <div class="mini-info">
-        <div class="mini-title">Select a Song</div>
-        <div class="mini-artist">Artist Name</div>
-    </div>
-    <div class="mini-controls">
-        <button class="mini-btn" onclick="prevSong()">
-            <i class="fa-solid fa-backward-step"></i>
-        </button>
-        <button class="mini-btn" onclick="togglePlay()">
-            <i class="fa-solid fa-play" id="playIcon"></i>
-        </button>
-        <button class="mini-btn" onclick="nextSong()">
-            <i class="fa-solid fa-forward-step"></i>
-        </button>
-    </div>
-</div>
-
-<!-- Bottom Navigation -->
-<nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchNav(this, 'home')">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-    </button>
-    <button class="nav-item" onclick="switchNav(this, 'search')">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <span>Search</span>
-    </button>
-    <button class="nav-item" onclick="switchNav(this, 'library')">
-        <i class="fa-solid fa-music"></i>
-        <span>Library</span>
-    </button>
-</nav>
 
 
 <script>
@@ -2781,64 +2908,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSection('home');
 });
 
-// ========================================
-   MOBILE FUNCTIONS
-   ========================================
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('active');
-    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
-}
 
-function showMobileSearch() {
-    const searchBar = document.getElementById('mobileSearchBar');
-    searchBar.classList.toggle('hidden');
-    if (!searchBar.classList.contains('hidden')) {
-        document.getElementById('mobileSearchInput').focus();
-    }
-}
-
-function switchTab(element, tabName) {
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    element.classList.add('active');
-    showToast(tabName + ' section');
-}
-
-function switchNav(element, navName) {
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    element.classList.add('active');
-    if (navName === 'search') {
-        showMobileSearch();
-    }
-}
-
-function playGenre(genre) {
-    showToast('Playing ' + genre + ' mix');
-}
-
-function togglePlay() {
-    const icon = document.getElementById('playIcon');
-    if (icon.classList.contains('fa-play')) {
-        icon.classList.remove('fa-play');
-        icon.classList.add('fa-pause');
-    } else {
-        icon.classList.remove('fa-pause');
-        icon.classList.add('fa-play');
-    }
-}
-
-function prevSong() {
-    showToast('Previous song');
-}
-
-function nextSong() {
-    showToast('Next song');
-}
-
-function showSection(sectionName) {
-    toggleMobileMenu();
-    showToast('Opening ' + sectionName);
-}
 </script>
 </body>
 </html>
